@@ -3,7 +3,7 @@ import { Header } from './Header'
 
 export const Hero = () => {
     return (
-        <div className="relative h-[120vh] w-full overflow-x-hidden overflow-hidden">
+        <div className="relative h-[100vh] w-full overflow-x-hidden overflow-hidden">
             <video
                 autoPlay
                 loop
