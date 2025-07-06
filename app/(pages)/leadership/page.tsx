@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const leadershipTeam = [
-  { role: "Deputy Director", name: "Bokamoso Mogedi" },
-  { role: "Secretary", name: "Obakeng Kgampe" },
-  { role: "Assistant Secretary", name: "Nontobeko Simelane" },
-  { role: "Treasurer", name: "Obakeng Makgae" },
+  { role: "Deputy Director", name: "Bokamoso Mogedi", img: "/bokamoso.jpg" },
+  { role: "Secretary", name: "Obakeng Kgampe", img: "/obakeng.jpg" },
+  { role: "Assistant Secretary", name: "Nontobeko Simelane", img: "/nontobeko.jpg" },
+  { role: "Treasurer", name: "Obakeng Makgae", img: "/makgae.jpg" },
 ];
 
 const LeadershipPage = () => {
@@ -30,7 +30,11 @@ const LeadershipPage = () => {
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {/* Bishop */}
           <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col items-center border-2 border-[#2f3a82]/10">
-            <div className="w-24 h-24 bg-[#e1c575] rounded-full flex items-center justify-center text-4xl font-extrabold text-[#2f3a82] mb-4">B</div>
+            <img
+              src="/bishop.jpg"
+              alt="Rt Rev GA Seane"
+              className="w-24 h-24 rounded-full object-cover border-4 border-[#e1c575] mb-4 shadow"
+            />
             <h2 className="text-2xl font-bold text-[#2f3a82] mb-1">Rt Rev GA Seane</h2>
             <span className="text-base font-medium text-gray-600 mb-2">Bishop</span>
             <blockquote className="italic text-gray-700 mb-2 border-l-4 border-[#e1c575] pl-4">
@@ -40,7 +44,11 @@ const LeadershipPage = () => {
           </div>
           {/* Director */}
           <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col items-center border-2 border-[#2f3a82]/10">
-            <div className="w-24 h-24 bg-[#2f3a82] rounded-full flex items-center justify-center text-4xl font-extrabold text-white mb-4">D</div>
+            <img
+              src="/kgosi.jpg"
+              alt="Nkagiseng Kgosi Rammekwa"
+              className="w-24 h-24 rounded-full object-cover border-4 border-[#2f3a82] mb-4 shadow"
+            />
             <h2 className="text-2xl font-bold text-[#2f3a82] mb-1">Nkagiseng Kgosi Rammekwa</h2>
             <span className="text-base font-medium text-gray-600 mb-2">Director</span>
             <p className="text-[#2f3a82] font-semibold mb-2 text-center">"Test all things; hold fast to what is good." – 1 Thessalonians 5:21</p>
@@ -56,9 +64,12 @@ const LeadershipPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {leadershipTeam.map((member, idx) => (
               <div key={member.name} className="flex flex-col items-center gap-2 p-6 rounded-2xl shadow min-w-[180px] bg-gray-50 border-2 border-[#2f3a82]/10">
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold shadow border-2 ${idx % 2 === 0 ? 'bg-[#e1c575] border-[#e1c575] text-[#2f3a82]' : 'bg-[#2f3a82] border-[#2f3a82] text-white'}`}>
-                  {member.name.split(' ').map(n => n[0]).join('')}
-                </div>
+                <img
+                  src={member.img}
+                  alt={member.name}
+                  className="w-16 h-16 rounded-full object-cover border-2 shadow mb-2"
+                  style={{ borderColor: idx % 2 === 0 ? '#e1c575' : '#2f3a82' }}
+                />
                 <span className="font-semibold text-[#2f3a82] text-lg text-center">{member.name}</span>
                 <div className="text-sm text-gray-500 text-center">{member.role}</div>
               </div>

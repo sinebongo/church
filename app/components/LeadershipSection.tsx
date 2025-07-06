@@ -6,14 +6,14 @@ const mainLeaders = [
   {
     name: "Rt Rev GA Seane",
     role: "Bishop",
-    image: "/CDYL.jpg",
+    image: "/bishop.jpg",
     quote: "Beloved in Christ, as we journey together in faith, let us remember that our strength is found in unity and our hope in Christ alone. May the Lord guide and bless each of you as you serve with humility, love, and unwavering faith. Together, let us be a light to the world, steadfast in prayer and bold in our witness. Remain rooted in grace and let your lives reflect the love of our Savior.",
     color: "bg-[#e1c575] text-[#2f3a82]"
   },
   {
     name: "Nkagiseng Kgosi Rammekwa",
     role: "Director",
-    image: "/logo.png",
+    image: "/kgosi.jpg",
     quote: `Test all things; hold fast to what is good. – 1 Thessalonians 5:21,
     As young believers, we are called to be rooted in Christ, united in faith, and bold in service. The Youth League exists to nurture spiritual growth, encourage fellowship, and empower youth for leadership and outreach. Let us stand firm in truth, transform our communities with Christ’s love, and move forward together in God’s mission.`,
     color: "bg-[#2f3a82] text-white"
