@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 export const AboutSection = () => {
 return (
-  <div className="flex flex-col md:flex-row items-center justify-center  text-[#2f3a82] md:h-[90vh] overflow-x-hidden overflow-hidden my-8 px-8 md:px-12 w-full">
+  <div className="flex flex-col md:flex-row items-center justify-center bg-white  text-[#2f3a82] md:h-[90vh] overflow-x-hidden overflow-hidden my-8 px-8 md:px-12 w-full">
     
     {/* Image Section */}
     <motion.div 
