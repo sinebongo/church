@@ -21,7 +21,7 @@ export default function About() {
         {/* Introduction Section */}
         <div className=" mb-12">
           <p className="text-lg text-gray-700 leading-relaxed">
-            The Demarcation Central Diocese Youth League is a dynamic and vibrant organization dedicated to empowering and guiding young people within the Church. Our mission is to cultivate spiritual growth, leadership, and active participation in the community, all while fostering deep connections with God through worship, prayer, and reflection on His word.
+            The Central Diocese Youth League is a dynamic and vibrant organization dedicated to empowering and guiding young people within the Church. Our mission is to cultivate spiritual growth, leadership, and active participation in the community, all while fostering deep connections with God through worship, prayer, and reflection on His word.
           </p>
         </div>
 
@@ -58,11 +58,10 @@ export default function About() {
               <h3 className="text-xl font-semibold text-[#2f3a82] mb-2">Eastern Part</h3>
               <p className="text-gray-700 font-medium mb-3">Eastern Circuit</p>
               <div className="text-sm text-gray-600 leading-relaxed">
-                <p>820 KUBEDI STREET</p>
-                <p>VOSLOORUS</p>
-                <p>BOKSBURG</p>
-                <p>1475</p>
-              </div>
+                <p>820 Kubedi Street</p>
+                <p>Vosloorus</p>
+                <p>Boksburg</p>
+                <p>1475</p>    </div>
             </div>
             <div className="bg-white rounded-lg p-6 text-center hover:shadow-lg transition-shadow border-2 border-[#2f3a82]/10 hover:border-[#2f3a82]/30">
               <div className="w-12 h-12 bg-[#2f3a82] rounded-full flex items-center justify-center mx-auto mb-4">

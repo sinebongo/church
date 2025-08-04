@@ -11,7 +11,7 @@ const mainLeaders = [
     color: "bg-[#e1c575] text-[#2f3a82]"
   },
   {
-    name: "Nkagiseng Kgosi Rammekwa",
+    name: "Kgosi Nkagiseng Rammekwa",
     role: "Director",
     image: "/kgosi.jpg",
     quote: `Test all things; hold fast to what is good. – 1 Thessalonians 5:21,

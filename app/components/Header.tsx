@@ -29,7 +29,7 @@ export const Header = () => {
     return (
         <div className="relative z-[3] h-full flex flex-col justify-center items-center text-white text-center px-4 w-full overflow-x-hidden">
             <h1
-                className="text-4xl md:text-6xl font-bold drop-shadow-lg md:w-2/3 animate-fade-in"
+                className="text-4xl md:text-6xl font-bold drop-shadow-lg md:w-2/3 animate-fade-in uppercase"
                 style={{ animation: 'fadeInDown 1s ease' }}
             >
                 Evangelical Lutheran Church in South Africa
@@ -39,7 +39,7 @@ export const Header = () => {
                 className="mt-4 text-lg md:text-2xl animate-fade-in"
                 style={{ animation: 'fadeInUp 1.5s ease' }}
             >
-                Central diocese Prayer Youth League
+                Central Diocese Prayer Youth League
             </p>
             <div
                 className="mt-6 animate-fade-in"

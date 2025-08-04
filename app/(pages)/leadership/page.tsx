@@ -31,7 +31,7 @@ const LeadershipPage = () => {
           {/* Bishop */}
           <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col items-center border-2 border-[#2f3a82]/10">
             <img
-              src="/bishop.jpg"
+              src="/bishop.png"
               alt="Rt Rev GA Seane"
               className="w-24 h-24 rounded-full object-cover border-4 border-[#e1c575] mb-4 shadow"
             />
