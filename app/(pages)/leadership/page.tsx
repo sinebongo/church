@@ -3,13 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { leadershipTeam, additionalleaders } from "../../services/data";
 
-const leadershipTeam = [
-  { role: "Deputy Director", name: "Bokamoso Mogedi", img: "/bokamoso.jpg" },
-  { role: "Secretary", name: "Obakeng Kgampe", img: "/obakeng.jpg" },
-  { role: "Assistant Secretary", name: "Nontobeko Simelane", img: "/nontobeko.jpg" },
-  { role: "Treasurer", name: "Obakeng Makgae", img: "/makgae.jpg" },
-];
+
 
 const LeadershipPage = () => {
   return (
@@ -60,9 +56,27 @@ const LeadershipPage = () => {
 
         {/* Leadership Team Section */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
-          <h3 className="text-3xl font-bold mb-8 text-[#2f3a82] text-center tracking-wide">Leadership Team</h3>
+          <h3 className="text-3xl font-bold mb-8 text-[#2f3a82] text-center tracking-wide">Executive Team</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {leadershipTeam.map((member, idx) => (
+              <div key={member.name} className="flex flex-col items-center gap-2 p-6 rounded-2xl shadow min-w-[180px] bg-gray-50 border-2 border-[#2f3a82]/10">
+                <img
+                  src={member.img}
+                  alt={member.name}
+                  className="w-16 h-16 rounded-full object-cover border-2 shadow mb-2"
+                  style={{ borderColor: idx % 2 === 0 ? '#e1c575' : '#2f3a82' }}
+                />
+                <span className="font-semibold text-[#2f3a82] text-lg text-center">{member.name}</span>
+                <div className="text-sm text-gray-500 text-center">{member.role}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+          {/* Leadership Team Section */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
+          <h3 className="text-3xl font-bold mb-8 text-[#2f3a82] text-center tracking-wide">Additional Leadership Team</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {additionalleaders.map((member, idx) => (
               <div key={member.name} className="flex flex-col items-center gap-2 p-6 rounded-2xl shadow min-w-[180px] bg-gray-50 border-2 border-[#2f3a82]/10">
                 <img
                   src={member.img}
