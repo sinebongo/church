@@ -1,7 +1,38 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 
-const NEXT_STREAM_DATE = new Date('2025-07-07T10:00:00+02:00') // Set your next stream date/time here
+// const NEXT_STREAM_DATE = new Date('2025-07-07T10:00:00+02:00') // Set your next stream date/time here
+const NEXT_STREAM_DATE = getNextStreamDate();
+function getNextStreamDate(): Date {
+    const now = new Date()
+    // Find next Sunday
+    const dayOfWeek = now.getDay() // 0 = Sunday
+    // Calculate days until next Sunday (if today is Sunday and before 13:00, stay this week)
+    let daysUntilSunday = (7 - dayOfWeek) % 7
+    const isTodaySunday = dayOfWeek === 0
+    const isBefore1pm = now.getHours() < 13
+
+    let nextSunday = new Date(now)
+    if (isTodaySunday && isBefore1pm) {
+        // Today is Sunday before 1pm, so next stream is today at 8am (if not already passed)
+        nextSunday.setHours(8, 0, 0, 0)
+        if (now < nextSunday) {
+            return nextSunday
+        } else {
+            // If it's already past 8am, set for next week
+            nextSunday = new Date(now)
+            nextSunday.setDate(now.getDate() + 7)
+            nextSunday.setHours(8, 0, 0, 0)
+            return nextSunday
+        }
+    } else if (isTodaySunday && now.getHours() >= 13) {
+        // After 1pm Sunday, set for next week
+        daysUntilSunday = 7
+    }
+    nextSunday.setDate(now.getDate() + daysUntilSunday)
+    nextSunday.setHours(8, 0, 0, 0)
+    return nextSunday
+}
 
 function getTimeRemaining(target: Date) {
     const total = target.getTime() - new Date().getTime()

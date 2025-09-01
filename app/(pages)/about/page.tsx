@@ -1,7 +1,9 @@
 
 
 "use client";
+
 import { motion } from "framer-motion";
+import DownloadButton from "../../components/DownloadButton";
 
 export default function About() {
   return (
@@ -11,7 +13,7 @@ export default function About() {
       transition={{ duration: 0.7, ease: "easeOut" }}
       className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12 px-4"
     >
-      <div className="max-w-6xl mx-auto">
+  <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-[#2f3a82] mb-4">About Us</h1>
@@ -150,16 +152,29 @@ export default function About() {
             </p>
           </div>
         </div>
-
-        {/* Call to Action */}
+        {/* Downloadable Documents Section */}
         <div className="bg-gradient-to-r from-[#2f3a82] to-[#2f3a82]/80 rounded-lg p-8 mt-12 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Join Our Community</h2>
+          <h2 className="text-3xl font-bold mb-4">Downloadable Documents</h2>
           <p className="text-lg mb-6">
-            Be part of a movement that transforms lives and builds faithful leaders for tomorrow.
+            Access important documents and resources for the Central Diocese Youth League.
           </p>
-          <button className="bg-[#e1c575] text-[#2f3a82] px-8 py-3 rounded-lg font-semibold hover:bg-[#e1c575]/90 transition-colors">
-            Get Involved
-          </button>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-center gap-4">
+            <DownloadButton href="/documents/CCDYL_SOCIAL_MEDIA_ANNOUNCEMENT.pdf">
+              Social Media Announcement
+            </DownloadButton>
+            <DownloadButton href="/documents/elcsa_by-laws_20102-edited-09-2011.pdf">
+              ELCSA Youth League By-Laws (2010/2011)
+            </DownloadButton>
+            <DownloadButton href="/documents/ELCSA-CONSTITUTION-AMMENDED-SEPTEMBER-2011-THE-FINAL-ONE-WITHOUTH-SIGNATURES-PAGE-3-.pdf">
+              ELCSA Constitution (Amended September 2011)
+            </DownloadButton>
+            <DownloadButton href="/documents/Probation_Booklet_DC-3_011837.pdf">
+              Probation Booklet
+            </DownloadButton>
+            <DownloadButton href="/documents/Signed_ELCSA_Youth_League_Constitution-1.pdf">
+              Signed ELCSA Youth League Constitution
+            </DownloadButton>
+          </div>
         </div>
       </div>
     </motion.div>

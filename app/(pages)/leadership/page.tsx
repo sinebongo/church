@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { leadershipTeam, additionalleaders } from "../../services/data";
+import ChurchMembersList from "@/app/components/ChurchMembersList";
 
 
 
@@ -31,7 +32,7 @@ const LeadershipPage = () => {
               alt="Rt Rev GA Seane"
               className="w-24 h-24 rounded-full object-cover border-4 border-[#e1c575] mb-4 shadow"
             />
-            <h2 className="text-2xl font-bold text-[#2f3a82] mb-1">Rt Rev GA Seane</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-[#2f3a82] mb-1">Rt Rev GA Seane</h2>
             <span className="text-base font-medium text-gray-600 mb-2">Bishop</span>
             <blockquote className="italic text-gray-700 mb-2 border-l-4 border-[#e1c575] pl-4">
               “Beloved in Christ, as we journey together in faith, let us remember that our strength is found in unity and our hope in Christ alone. May the Lord guide and bless each of you as you serve with humility, love, and unwavering faith. Together, let us be a light to the world, steadfast in prayer and bold in our witness. Remain rooted in grace and let your lives reflect the love of our Savior.”
@@ -45,7 +46,7 @@ const LeadershipPage = () => {
               alt="Nkagiseng Kgosi Rammekwa"
               className="w-24 h-24 rounded-full object-cover border-4 border-[#2f3a82] mb-4 shadow"
             />
-            <h2 className="text-2xl font-bold text-[#2f3a82] mb-1">Nkagiseng Kgosi Rammekwa</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-[#2f3a82] mb-1">Nkagiseng Kgosi Rammekwa</h2>
             <span className="text-base font-medium text-gray-600 mb-2">Director</span>
             <p className="text-[#2f3a82] font-semibold mb-2 text-center">"Test all things; hold fast to what is good." – 1 Thessalonians 5:21</p>
             <p className="max-w-xl text-gray-700 text-center">
@@ -91,15 +92,34 @@ const LeadershipPage = () => {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="bg-gradient-to-r from-[#2f3a82] to-[#e1c575] rounded-lg p-8 mt-12 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Get Involved</h2>
-          <p className="text-lg mb-6">
-            Be part of a movement that transforms lives and builds faithful leaders for tomorrow.
-          </p>
-          <Link href="/about" className="bg-white text-[#2f3a82] px-8 py-3 rounded-lg font-semibold hover:bg-[#e1c575]/90 hover:text-white transition-colors">
-            Learn More About Us
-          </Link>
+        {/* Church Members Section */}
+        <div className="relative bg-gradient-to-r from-[#2f3a82] via-[#e1c575]/60 to-[#e1c575] rounded-3xl p-10 mt-16 shadow-xl overflow-hidden">
+          {/* Decorative SVGs */}
+          <svg className="absolute top-0 left-0 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="50" fill="#e1c575" />
+          </svg>
+          <svg className="absolute bottom-0 right-0 w-40 h-40 opacity-10" viewBox="0 0 100 100" fill="none">
+            <rect width="100" height="100" rx="30" fill="#2f3a82" />
+          </svg>
+          <div className="relative z-10">
+            <h2 className="text-4xl font-extrabold mb-4 text-center drop-shadow-lg tracking-tight bg-gradient-to-r from-[#e1c575] via-white to-[#2f3a82] bg-clip-text text-transparent">
+              Our Church Members
+            </h2>
+            <p className="text-lg text-center mb-8 text-white/90 font-light">
+              United in faith, diverse in gifts — together we shine brighter. Meet the heart of our community!
+            </p>
+            <div className="flex justify-center">
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.7, ease: "backOut" }}
+                viewport={{ once: true }}
+                className="w-full"
+              >
+                <ChurchMembersList />
+              </motion.div>
+            </div>
+          </div>
         </div>
 
         {/* Footer */}

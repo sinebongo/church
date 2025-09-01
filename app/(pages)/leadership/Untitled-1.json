@@ -1,0 +1,53 @@
+[
+  {
+    "SourceSystemID": "BigGreen",
+    "DestinationSystemID": "ISA",
+    "TopicName": "UAT.FSC_ISA_Preadvisement",
+    "PayloadID": "f53d8801-2c2c-49a7-80ef-4a28481df828",
+    "Timestamp": 1756297716878,
+    "Data": {
+      "BagId": 4805,
+      "ClientCode": "125270-QTN-F-FCS",
+      "CollectedDate": 1754640406000,
+      "DepositDeclared": "CdZPgA==",
+      "DepositId1": "80675",
+      "DepositId2": "1234567899",
+      "DepositId3": "",
+      "DepositId4": "46506000360510",
+      "DepositId5": "",
+      "DepositId6": "",
+      "DepositId7": "",
+      "DenomClassCode": "",
+      "ProcessTime": 1754640406000,
+      "ProcesseDate": null,
+      "DeclaredNote": "GS7g",
+      "DeclaredCoin": "AA==",
+      "DeclaredCheque": "AA==",
+      "DeclaredOther": "AA==",
+      "RuleName": "ABSA_Device Preadvised",
+      "Media": [
+        {
+          "DenomCode": "1000",
+          "DenomCount": 9
+        },
+        {
+          "DenomCode": "1001",
+          "DenomCount": 110
+        },
+        {
+          "DenomCode": "1002",
+          "DenomCount": 581
+        },
+        {
+          "DenomCode": "1003",
+          "DenomCount": 885
+        },
+        {
+          "DenomCode": "1004",
+          "DenomCount": 226
+        }
+      ],
+      "ProcessDate": 1756297716878
+    }
+  }
+]
