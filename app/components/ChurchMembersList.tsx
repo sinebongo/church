@@ -54,13 +54,13 @@ const ChurchMembersList: React.FC = () => {
       <div className="flex mb-6">
         <input
           type="text"
-          className="flex-1 border border-blue-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          className="flex-1 border border-blue-300 rounded-l-lg  py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
           placeholder="Search by name or parish..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
         <button
-          className="bg-blue-600 text-white px-6 py-2 rounded-r-lg font-semibold hover:bg-blue-700 transition"
+          className="bg-blue-600 text-whitepx-6 py-2 rounded-r-lg font-semibold hover:bg-blue-700 transition"
           onClick={handleSearch}
           disabled={loading}
         >

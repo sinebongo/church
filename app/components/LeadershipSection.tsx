@@ -6,12 +6,12 @@ const mainLeaders = [
   {
     name: "Rt Rev GA Seane",
     role: "Bishop",
-    image: "/bishop.jpg",
+    image: "/bishop.png",
     quote: "Beloved in Christ, as we journey together in faith, let us remember that our strength is found in unity and our hope in Christ alone. May the Lord guide and bless each of you as you serve with humility, love, and unwavering faith. Together, let us be a light to the world, steadfast in prayer and bold in our witness. Remain rooted in grace and let your lives reflect the love of our Savior.",
     color: "bg-[#e1c575] text-[#2f3a82]"
   },
   {
-    name: "Kgosi Nkagiseng Rammekwa",
+    name: "Nkagiseng Rammekwa",
     role: "Director",
     image: "/kgosi.jpg",
     quote: `Test all things; hold fast to what is good. – 1 Thessalonians 5:21,

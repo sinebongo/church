@@ -34,12 +34,12 @@ const GivingSection = () => {
             <span className="absolute bottom-10 -right-12 w-28 h-28 bg-[#e1c575]/20 rounded-full blur-2xl z-0"></span>
             <span className="absolute bottom-2 left-14 w-20 h-20 bg-[#2f3a82]/10 rounded-full blur-2xl z-0"></span>
             {/* Main image */}
-            <div className="w-full h-full rounded-full overflow-hidden border-8 border-[#e1c575] shadow-2xl animate-pulse-slow relative z-10 bg-white flex items-center justify-center transition-transform duration-500 hover:scale-105">
+            <div className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-8 border-[#e1c575] shadow-2xl animate-pulse-slow relative z-10 bg-white flex items-center justify-center transition-transform duration-500 hover:scale-105">
               <img
-                src="/charity.jpg"
-                alt="Giving"
-                className="w-full h-full object-cover"
-                loading="lazy"
+              src="/charity.jpg"
+              alt="Giving"
+              className="w-full h-full object-cover"
+              loading="lazy"
               />
             </div>
           </div>

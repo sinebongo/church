@@ -3,6 +3,8 @@ import React from 'react';
 import { motion } from "framer-motion";
 
 export default function Giving() {
+  const [showBankDetails, setShowBankDetails] = React.useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -100,23 +102,90 @@ export default function Giving() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Online Giving</h3>
               <p className="text-white/90 mb-4">Give securely online using your bank account or credit card</p>
-              <button className="bg-white text-[#2f3a82] px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              <a href='./contact' className="bg-white text-[#2f3a82] px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                 Give Online
-              </button>
+              </a>
             </div>
 
             {/* Bank Transfer */}
-            <div className="bg-white border-2 border-[#2f3a82]/20 rounded-lg p-6 text-center hover:shadow-lg transition-shadow hover:border-[#2f3a82]/40">
-              <div className="w-16 h-16 bg-[#2f3a82] rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
+            <div className="flip-card">
+              <div className={`flip-card-inner ${showBankDetails ? 'flipped' : ''}`}> 
+                {/* Front Side */}
+                <div className="flip-card-front card-content">
+                  <div className="w-16 h-16 bg-[#2f3a82] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-[#2f3a82] mb-3">Bank Transfer</h3>
+                  <p className="text-gray-700 mb-4">Make a direct bank transfer to our church account</p>
+                  <button
+                    className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#2f3a82]/90 transition-colors"
+                    onClick={() => setShowBankDetails(true)}
+                  >
+                    Bank Details
+                  </button>
+                </div>
+                {/* Back Side */}
+                <div className="flip-card-back card-content">
+                  <h4 className="text-lg font-bold text-[#2f3a82] mb-2">Church Bank Details</h4>
+                  <p className="text-gray-700"><span className="font-semibold">Bank Name:</span> Standard Bank</p>
+                  <p className="text-gray-700"><span className="font-semibold">Account Name:</span> Marketlink Business</p>
+                  <p className="text-gray-700"><span className="font-semibold">Account Number:</span> 000 0001 37371675</p>
+                  <p className="text-gray-700"><span className="font-semibold">Branch Code:</span> 21019</p>
+                  <button
+                    className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#2f3a82]/90 transition-colors mt-4"
+                    onClick={() => setShowBankDetails(false)}
+                  >
+                    Hide Details
+                  </button>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-[#2f3a82] mb-3">Bank Transfer</h3>
-              <p className="text-gray-700 mb-4">Make a direct bank transfer to our church account</p>
-              <button className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#2f3a82]/90 transition-colors">
-                Bank Details
-              </button>
+              <style>{`
+                .flip-card {
+                  background-color: transparent;
+                  width: 100%;
+                  height: 100%;
+                  perspective: 1000px;
+                  min-height: 340px;
+                  display: flex;
+                  align-items: stretch;
+                }
+                .flip-card-inner {
+                  width: 100%;
+                  height: 100%;
+                  transition: transform 0.7s cubic-bezier(.4,2,.3,1);
+                  transform-style: preserve-3d;
+                  position: relative;
+                }
+                .card-content {
+                  background: white;
+                  border-radius: 0.75rem;
+                  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                  border: 2px solid #2f3a8233;
+                  padding: 1.5rem;
+                  text-align: center;
+                  min-height: 340px;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  width: 100%;
+                  height: 100%;
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  backface-visibility: hidden;
+                }
+                .flip-card-back {
+                  background: #f9f9f9;
+                  border: 1px solid #2f3a8233;
+                  transform: rotateY(180deg);
+                }
+                .flipped {
+                  transform: rotateY(180deg);
+                }
+              `}</style>
             </div>
 
             {/* In-Person Giving */}
@@ -128,9 +197,9 @@ export default function Giving() {
               </div>
               <h3 className="text-xl font-semibold text-[#2f3a82] mb-3">In-Person Giving</h3>
               <p className="text-gray-700 mb-4">Bring your offering during church services or events</p>
-              <button className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#2f3a82]/90 transition-colors">
-                Service Times
-              </button>
+              <a href='/about' className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#2f3a82]/90 transition-colors">
+                Visit Us
+              </a>
             </div>
           </div>
         </div>

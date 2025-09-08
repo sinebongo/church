@@ -46,7 +46,7 @@ const LeadershipPage = () => {
               alt="Nkagiseng Kgosi Rammekwa"
               className="w-24 h-24 rounded-full object-cover border-4 border-[#2f3a82] mb-4 shadow"
             />
-            <h2 className="text-lg md:text-2xl font-bold text-[#2f3a82] mb-1">Nkagiseng Kgosi Rammekwa</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-[#2f3a82] mb-1">Nkagiseng Rammekwa</h2>
             <span className="text-base font-medium text-gray-600 mb-2">Director</span>
             <p className="text-[#2f3a82] font-semibold mb-2 text-center">"Test all things; hold fast to what is good." – 1 Thessalonians 5:21</p>
             <p className="max-w-xl text-gray-700 text-center">

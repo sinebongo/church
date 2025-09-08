@@ -11,7 +11,7 @@ export const NavBar = () => {
         { name: 'About', href: '/about' },
         { name: 'Events', href: '/events' },
         { name: 'Giving', href: '/giving' },
-        { name: 'leadership', href: '/leadership' },
+        { name: 'Leadership', href: '/leadership' },
         { name: 'Contact', href: '/contact' },
     ];
     const pathname = usePathname();
