@@ -3,13 +3,13 @@
 "use client";
 import { motion } from "framer-motion";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { FaTiktok, FaInstagram, FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
 
 const address = [
-  "Pretoria Circuit",
-  "01 Sompane Street,",
-  "Atteridgeville",
-  "PO Box 47 Atteridgeville",
-  "0008",
+  "833 Diokane Drive, Central Western Jabavu,",
+  "Soweto",
+  "P.O. Box 1210 Roodepoort",
+  "1725",
 ];
 
 
@@ -40,7 +40,7 @@ export default function ContactPage() {
             <FaPhoneAlt /> <span>+27 12 345 6789</span>
           </div>
           <div className="flex items-center gap-2 text-[#2f3a82] text-sm sm:text-base">
-            <FaEnvelope /> <span>info@pretoriacircuit.org</span>
+            <FaEnvelope /> <span>elcsa.cdpyl@gmail.com</span>
           </div>
           <div className="flex items-center gap-2 text-[#2f3a82] text-sm sm:text-base">
             <span className="font-semibold">Office Hours:</span>
@@ -48,9 +48,13 @@ export default function ContactPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2 text-[#2f3a82] text-sm sm:text-base">
             <span className="font-semibold">Social:</span>
-            <a href="https://facebook.com/pretoriacircuit" target="_blank" rel="noopener noreferrer" className="hover:underline">Facebook</a>
+            <a href="https://www.instagram.com/elcsacdyl/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+              <FaInstagram className="text-xl" /> <span className="hidden sm:inline">Instagram:</span> @ELCSACDYL
+            </a>
             <span className="hidden sm:inline">|</span>
-            <a href="https://twitter.com/pretoriacircuit" target="_blank" rel="noopener noreferrer" className="hover:underline">Twitter</a>
+            <a href="https://www.youtube.com/@ELCSACentralDioceseYouthLeague" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+              <FaYoutube className="text-xl" /> <span className="hidden sm:inline">YouTube:</span> @ ELCSA Central Diocese Youth League
+            </a>
           </div>
         </section>
         <section className="flex-1 flex flex-col gap-4 min-w-0">
@@ -62,7 +66,7 @@ export default function ContactPage() {
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="email" className="font-medium text-[#2f3a82]">Email</label>
-              <input id="email" name="email" type="email" required className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm sm:text-base" placeholder="you@email.com" />
+              <input id="email" name="email" type="email" required className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm sm:text-base" placeholder="elcsa.cdpyl@gmail.com" />
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="message" className="font-medium text-[#2f3a82]">Message</label>
@@ -73,8 +77,8 @@ export default function ContactPage() {
           <h2 className="text-xl sm:text-2xl font-semibold text-[#2f3a82] mb-2 mt-8">Location Map</h2>
           <div className="w-full h-56 sm:h-64 rounded-lg overflow-hidden border-2 border-blue-200 shadow-md">
             <iframe
-              title="Pretoria Circuit Map"
-              src="https://www.google.com/maps?q=01+Sompane+Street,+Atteridgeville,+Pretoria,+0008&output=embed"
+              title="ELCSA CDPYL Main Branch Map"
+              src="https://www.google.com/maps?q=833+Diokane+Drive,+Central+Western+Jabavu,+Soweto,+P.O.+Box+1210+Roodepoort+1725&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}

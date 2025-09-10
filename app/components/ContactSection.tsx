@@ -9,15 +9,10 @@ const ContactSection = () => {
         <p className="mb-8 text-blue-100 text-center text-lg">We would love to hear from you! Reach out with any questions or comments.</p>
         <form className="bg-white/80 rounded-lg shadow p-8 flex flex-col gap-4 max-w-xl mx-auto">
           <input type="text" placeholder="Your Name" className="border border-blue-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-          <input type="email" placeholder="Your Email" className="border border-blue-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <input type="email" placeholder="elcsa.cdpyl@gmail.com" className="border border-blue-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
           <textarea placeholder="Your Message" rows={4} className="border border-blue-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
           <button type="submit" className="bg-[#2f3a82] hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition">Send Message</button>
         </form>
-        <div className="mt-12 text-center text-blue-100">
-          <p>Email: <a href="mailto:info@church.org" className="underline">info@church.org</a></p>
-          <p>Phone: <a href="tel:+1234567890" className="underline">+1 234 567 890</a></p>
-          <p>Address: 123 Church Street, City, Country</p>
-        </div>
       </div>
     </section>
   );

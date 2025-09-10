@@ -1,7 +1,12 @@
-
+"use client";
 import React from 'react';
+import { FaYoutube, FaInstagram } from 'react-icons/fa';
 
 export default function StreamPage() {
+  const PLACEHOLDER_VIDEO_ID = 'dmYiBjbA5tg';
+  const [newsletterEmail, setNewsletterEmail] = React.useState('');
+  const [newsletterMsg, setNewsletterMsg] = React.useState('');
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e1c575]/30 via-white to-[#2f3a82]/10 flex flex-col items-center py-10 px-4 lg:px-25 w-full">
       {/* Word of the Month */}
@@ -17,10 +22,12 @@ export default function StreamPage() {
       <section className="w-full max-w-6xl bg-white/90 rounded-3xl shadow-2xl p-8 flex flex-col items-center mb-12 border border-[#e1c575]/30">
         <h1 className="text-3xl lg:text-4xl font-extrabold text-[#2f3a82] mb-6 tracking-tight text-center">Live Sermon Stream</h1>
         <div className="w-full aspect-video bg-black rounded-2xl overflow-hidden flex items-center justify-center mb-6 border-4 border-[#e1c575]/40 shadow-lg">
+          {/* Always show placeholder video */}
           <iframe
             className="w-full h-full"
-            src="https://www.youtube.com/embed/live_stream?channel=UC4QZ_LsYcvcq7qOsOhpAX4A"
-            title="Live Sermon Stream"
+            src={`https://www.youtube.com/embed/${PLACEHOLDER_VIDEO_ID}`}
+            title="Placeholder Sermon Video"
+            aria-label="Placeholder Sermon Video"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             style={{ minHeight: 320 }}
@@ -50,17 +57,40 @@ export default function StreamPage() {
             <h3 className="text-2xl font-bold text-[#2f3a82] mb-2">Connect With Us</h3>
             <p className="text-gray-700 mb-4">Follow us on social media for updates, inspiration, and community events.</p>
             <div className="flex gap-4 justify-center">
-              <a href="#" className="text-[#2f3a82] hover:text-[#e1c575] text-2xl" aria-label="Facebook"><i className="fab fa-facebook" /></a>
-              <a href="#" className="text-[#2f3a82] hover:text-[#e1c575] text-2xl" aria-label="YouTube"><i className="fab fa-youtube" /></a>
-              <a href="#" className="text-[#2f3a82] hover:text-[#e1c575] text-2xl" aria-label="Instagram"><i className="fab fa-instagram" /></a>
+              <a href="https://www.youtube.com/@ELCSACentralDioceseYouthLeague" className="text-[#2f3a82] hover:text-[#e1c575] text-2xl flex items-center gap-2" aria-label="YouTube">
+                <FaYoutube /> <span className="hidden sm:inline">YouTube</span>
+              </a>
+              <a href="https://www.instagram.com/elcsacdyl/" className="text-[#2f3a82] hover:text-[#e1c575] text-2xl flex items-center gap-2" aria-label="Instagram">
+                <FaInstagram /> <span className="hidden sm:inline">Instagram</span>
+              </a>
             </div>
           </div>
           <div className="bg-white/80 rounded-2xl shadow-lg p-8 flex flex-col items-center text-center">
             <h3 className="text-2xl font-bold text-[#e1c575] mb-2">Join Our Newsletter</h3>
             <p className="text-gray-700 mb-4">Stay up to date with the latest news, events, and sermons.</p>
             <form className="flex flex-col sm:flex-row gap-2 w-full max-w-md mx-auto">
-              <input type="email" placeholder="Your email address" className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2f3a82]" required />
-              <button type="submit" className="bg-[#2f3a82] hover:bg-[#e1c575] text-white font-bold px-6 py-2 rounded-lg transition-all">Subscribe</button>
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2f3a82]"
+                required
+                value={newsletterEmail}
+                onChange={e => setNewsletterEmail(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="bg-[#2f3a82] hover:bg-[#e1c575] text-white font-bold px-6 py-2 rounded-lg transition-all"
+                onClick={e => {
+                  e.preventDefault();
+                  setNewsletterMsg('Thank you for subscribing!');
+                  setNewsletterEmail('');
+                }}
+              >
+                Subscribe
+              </button>
+              {newsletterMsg && (
+                <div className="w-full text-green-600 text-sm mt-2 text-center">{newsletterMsg}</div>
+              )}
             </form>
           </div>
         </div>

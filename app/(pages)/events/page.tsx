@@ -3,99 +3,8 @@ import React, { useState, useEffect } from 'react';
 // import { motion } from "framer-motion";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { ALL_EVENTS, CATEGORIES } from '../../services/data';
 
-const ALL_EVENTS = [
-    {
-        id: 1,
-        title: "Youth Fellowship Night",
-        date: "2025-07-12",
-        time: "18:00",
-        location: "Main Hall",
-        description: "Join us for an evening of worship, games, and fellowship. All are welcome!",
-        category: "Youth",
-        image: "/CDYL.jpg",
-        featured: true
-    },
-    {
-        id: 2,
-        title: "Sunday Morning Worship",
-        date: "2025-07-13",
-        time: "10:00",
-        location: "Sanctuary",
-        description: "Join us for our weekly worship service with inspiring music and message.",
-        category: "Worship",
-        image: "/CDYL.jpg",
-        featured: true
-    },
-    {
-        id: 3,
-        title: "Community Outreach",
-        date: "2025-07-15",
-        time: "14:00",
-        location: "Community Center",
-        description: "Help us serve our local community with food distribution and fellowship.",
-        category: "Outreach",
-        image: "/CDYL.jpg",
-        featured: false
-    },
-    {
-        id: 4,
-        title: "Bible Study",
-        date: "2025-07-16",
-        time: "19:00",
-        location: "Fellowship Room",
-        description: "Weekly Bible study and discussion group for all ages.",
-        category: "Study",
-        image: "/CDYL.jpg",
-        featured: false
-    },
-    {
-        id: 5,
-        title: "Prayer Meeting",
-        date: "2025-07-18",
-        time: "19:30",
-        location: "Prayer Chapel",
-        description: "Join us for our weekly prayer meeting and spiritual reflection.",
-        category: "Prayer",
-        image: "/CDYL.jpg",
-        featured: false
-    },
-    {
-        id: 6,
-        title: "Children's Ministry",
-        date: "2025-07-20",
-        time: "10:00",
-        location: "Children's Room",
-        description: "Fun activities, games, and Bible stories for children ages 5-12.",
-        category: "Children",
-        image: "/CDYL.jpg",
-        featured: false
-    },
-    {
-        id: 7,
-        title: "Choir Practice",
-        date: "2025-07-22",
-        time: "19:00",
-        location: "Choir Loft",
-        description: "Weekly choir practice for all who love to sing and worship.",
-        category: "Music",
-        image: "/CDYL.jpg",
-        featured: false
-    },
-    {
-        id: 8,
-        title: "Men's Breakfast",
-        date: "2025-07-26",
-        time: "08:00",
-        location: "Fellowship Hall",
-        description: "Monthly men's breakfast with fellowship and inspiring message.",
-        category: "Men",
-        image: "/CDYL.jpg",
-        featured: false
-    }
-];
-
-const CATEGORIES = ["All", "Youth", "Worship", "Outreach", "Study", "Prayer", "Children", "Music", "Men"];
 
 // Helper function to format date consistently
 const formatDate = (dateString: string) => {
@@ -118,22 +27,95 @@ export default function EventsPage() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
     const [isMounted, setIsMounted] = useState(false);
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
     }, []);
 
-    const filteredEvents = ALL_EVENTS.filter(event => {
-        const categoryMatch = selectedCategory === "All" || event.category === selectedCategory;
-        const dateMatch = !selectedDate || event.date === selectedDate.toISOString().split('T')[0];
-        return categoryMatch && dateMatch;
-    });
+    // Filter events by selected date and category
+    const filteredEvents = (!selectedDate && selectedCategory === "All")
+        ? ALL_EVENTS
+        : ALL_EVENTS.filter(event => {
+            const categoryMatch = selectedCategory === "All" || event.category === selectedCategory;
+            let dateMatch = true;
+            if (selectedDate) {
+                const eventDate = new Date(event.date);
+                dateMatch = (
+                    eventDate.getFullYear() === selectedDate.getFullYear() &&
+                    eventDate.getMonth() === selectedDate.getMonth() &&
+                    eventDate.getDate() === selectedDate.getDate()
+                );
+            }
+            return categoryMatch && dateMatch;
+        });
 
     const featuredEvents = filteredEvents.filter(event => event.featured);
     const regularEvents = filteredEvents.filter(event => !event.featured);
 
+    // Ref for calendar section
+    const calendarRef = React.useRef<HTMLDivElement>(null);
+
+    const handleScrollToCalendar = () => {
+        if (calendarRef.current) {
+            calendarRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+            {/* Mobile Filter Modal */}
+            <div className={`fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center ${showMobileFilters ? '' : 'hidden'}`}>
+                <div className="bg-white rounded-2xl shadow-2xl p-6 w-11/12 max-w-sm relative">
+                    <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl" onClick={() => setShowMobileFilters(false)}>&times;</button>
+                    <h3 className="text-xl font-bold text-[#2f3a82] mb-4">Filters</h3>
+                    {/* Category Filter */}
+                    <div className="mb-6">
+                        <h4 className="text-lg font-semibold mb-2">Category</h4>
+                        <div className="space-y-2">
+                            {CATEGORIES.map(category => (
+                                <button
+                                    key={category}
+                                    onClick={() => { setSelectedCategory(category); setShowMobileFilters(false); }}
+                                    className={cn(
+                                        "w-full text-left px-4 py-2 rounded-lg transition-colors font-medium",
+                                        selectedCategory === category
+                                            ? "bg-[#2f3a82] text-white"
+                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    )}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    {/* Calendar Filter */}
+                    <div>
+                        <h4 className="text-lg font-semibold mb-2">Date</h4>
+                        {isMounted && (
+                            <Calendar
+                                mode="single"
+                                selected={selectedDate}
+                                onSelect={date => { setSelectedDate(date); setShowMobileFilters(false); }}
+                                className="w-full mb-2"
+                                classNames={{
+                                    day_selected: "bg-[#2f3a82] text-white hover:bg-[#2f3a82] hover:text-white focus:bg-[#2f3a82] focus:text-white",
+                                    day_today: "bg-gray-100 text-gray-900 font-semibold",
+                                    caption_label: "text-[#2f3a82] font-semibold",
+                                }}
+                            />
+                        )}
+                        {selectedDate && (
+                            <button
+                                onClick={() => setSelectedDate(undefined)}
+                                className="mt-2 w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
+                            >
+                                Clear Date Filter
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
             {/* Hero Section */}
             <section className="relative bg-gradient-to-r from-[#2f3a82] to-blue-600 text-white py-20">
                 <div className="absolute inset-0 bg-black opacity-20"></div>
@@ -146,20 +128,23 @@ export default function EventsPage() {
                         There's something for everyone in our church family.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button className="bg-white text-[#2f3a82] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        <button 
+                            className="bg-white text-[#2f3a82] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                            onClick={handleScrollToCalendar}
+                        >
                             View Calendar
                         </button>
-                        <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#2f3a82] transition-colors">
+                        {/* <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#2f3a82] transition-colors">
                             Register for Event
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </section>
 
             <div className="max-w-7xl mx-auto px-4 py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    {/* Sidebar */}
-                    <div className="lg:col-span-1">
+                    {/* Sidebar for desktop */}
+                    <div className="lg:col-span-1 hidden lg:block">
                         {/* Category Filter */}
                         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
                             <h3 className="text-xl font-bold text-[#2f3a82] mb-4">Filter by Category</h3>
@@ -180,9 +165,8 @@ export default function EventsPage() {
                                 ))}
                             </div>
                         </div>
-
                         {/* Calendar */}
-                        <div className="bg-white rounded-2xl shadow-lg p-6">
+                        <div className="bg-white rounded-2xl shadow-lg p-6" ref={calendarRef} id="calendar-section">
                             <h3 className="text-xl font-bold text-[#2f3a82] mb-4">Event Calendar</h3>
                             {isMounted && (
                                 <Calendar
@@ -210,6 +194,15 @@ export default function EventsPage() {
 
                     {/* Main Content */}
                     <div className="lg:col-span-3">
+                        {/* Mobile Filter Button */}
+                        <div className="mb-6 lg:hidden flex justify-end">
+                            <button
+                                className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#22306a] transition-colors"
+                                onClick={() => setShowMobileFilters(true)}
+                            >
+                                Filter Events
+                            </button>
+                        </div>
                         {/* Featured Events */}
                         {featuredEvents.length > 0 && (
                             <div className="mb-12">
@@ -246,9 +239,9 @@ export default function EventsPage() {
                                                     <span>{event.location}</span>
                                                 </div>
                                                 <p className="text-gray-700 mb-4">{event.description}</p>
-                                                <button className="w-full bg-[#2f3a82] text-white px-4 py-2 rounded-lg hover:bg-[#22306a] transition-colors font-semibold">
+                                                {/* <button className="w-full bg-[#2f3a82] text-white px-4 py-2 rounded-lg hover:bg-[#22306a] transition-colors font-semibold">
                                                     Register Now
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </div>
                                     ))}
@@ -346,7 +339,7 @@ export default function EventsPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                         <input 
                             type="email" 
-                            placeholder="Enter your email"
+                            placeholder="elcsa.cdpyl@gmail.com"
                             className="flex-1 px-4 py-3 rounded-lg text-gray-800 focus:outline-none ring-2 ring-white focus:ring-2 focus:ring-white"
                         />
                         <button className="bg-white text-[#2f3a82] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
