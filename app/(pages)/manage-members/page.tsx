@@ -154,8 +154,13 @@ const ManageMembersPage: React.FC = () => {
           </ul>
         )}
       </div>
+      <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
+        &copy; {new Date().getFullYear()} Pretoria Circuit. All rights reserved.
+      </footer>
     </div>
   );
 };
 
 export default ManageMembersPage;
+// Footer for Manage Members page
+// Add at the end of the main content

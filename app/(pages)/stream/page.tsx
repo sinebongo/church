@@ -97,9 +97,9 @@ export default function StreamPage() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full text-center py-6 text-gray-500 text-sm mt-auto">
-        &copy; {new Date().getFullYear()} ELCSA-CD. All rights reserved.
-      </footer>
+        <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
+          &copy; {new Date().getFullYear()} Pretoria Circuit. All rights reserved.
+        </footer>
     </div>
   );
 }

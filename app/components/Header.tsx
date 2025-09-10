@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 
 // const NEXT_STREAM_DATE = new Date('2025-07-07T10:00:00+02:00') // Set your next stream date/time here
-const NEXT_STREAM_DATE = getNextStreamDate();
 function getNextStreamDate(): Date {
     const now = new Date()
     // Find next Sunday
@@ -44,18 +43,21 @@ function getTimeRemaining(target: Date) {
 }
 
 export const Header = () => {
-    const [timeLeft, setTimeLeft] = useState(getTimeRemaining(NEXT_STREAM_DATE))
-    const [isClient, setIsClient] = useState(false)
+
+    const [nextStreamDate, setNextStreamDate] = useState<Date | null>(null);
+    const [timeLeft, setTimeLeft] = useState<{ total: number, days: number, hours: number, minutes: number, seconds: number } | null>(null);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        // Set isClient to true once the component has mounted on the client
-        setIsClient(true)
-        
+        setIsClient(true);
+        const date = getNextStreamDate();
+        setNextStreamDate(date);
+        setTimeLeft(getTimeRemaining(date));
         const timer = setInterval(() => {
-            setTimeLeft(getTimeRemaining(NEXT_STREAM_DATE))
-        }, 1000)
-        return () => clearInterval(timer)
-    }, [])
+            setTimeLeft(getTimeRemaining(date));
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
 
     return (
         <div className="relative z-[3] h-full flex flex-col justify-center items-center text-white text-center px-4 w-full overflow-x-hidden">
@@ -76,7 +78,7 @@ export const Header = () => {
                 className="mt-6 animate-fade-in"
                 style={{ animation: 'fadeIn 1.8s ease' }}
             >
-                {!isClient ? (
+                {!isClient || !timeLeft ? (
                     // Show a placeholder during SSR to prevent hydration mismatch
                     <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-6 py-4">
                         <span className="text-xl md:text-2xl font-bold">Loading countdown...</span>

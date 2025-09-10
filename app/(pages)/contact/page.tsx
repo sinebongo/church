@@ -37,7 +37,7 @@ export default function ContactPage() {
             ))}
           </address>
           <div className="flex items-center gap-2 mt-4 text-[#2f3a82] text-sm sm:text-base">
-            <FaPhoneAlt /> <span>+27 12 345 6789</span>
+            <FaPhoneAlt /> <span>+27 (11) 930-3555</span>
           </div>
           <div className="flex items-center gap-2 text-[#2f3a82] text-sm sm:text-base">
             <FaEnvelope /> <span>elcsa.cdpyl@gmail.com</span>

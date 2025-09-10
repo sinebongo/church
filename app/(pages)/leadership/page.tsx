@@ -122,9 +122,8 @@ const LeadershipPage = () => {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-16 py-6 text-center text-gray-400 text-sm">
-          &copy; {new Date().getFullYear()} ELCSA Central Diocese Youth League. All rights reserved.
+        <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
+          &copy; {new Date().getFullYear()} Pretoria Circuit. All rights reserved.
         </footer>
       </div>
     </motion.div>
