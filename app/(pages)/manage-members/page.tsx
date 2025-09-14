@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
 
 interface ChurchMember {
   id?: number;
@@ -21,11 +23,15 @@ const ManageMembersPage: React.FC = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Fetch members from Supabase
   const fetchMembers = async () => {
     setLoading(true);
-    const res = await fetch("/api/church-members");
-    if (res.ok) {
-      setMembers(await res.json());
+    const { data, error } = await supabase
+      .from("church_members")
+      .select("*")
+      .order("id", { ascending: false });
+    if (!error && data) {
+      setMembers(data);
     }
     setLoading(false);
   };
@@ -38,20 +44,30 @@ const ManageMembersPage: React.FC = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Add or update member using Supabase
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const method = editingId ? "PUT" : "POST";
-    const url = editingId ? `/api/church-members?id=${editingId}` : "/api/church-members";
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    if (res.ok) {
-      setForm({ name_and_surname: "", parish: "", biblical_scripture: "", hymn: "" });
-      setEditingId(null);
-      fetchMembers();
+    if (editingId) {
+      // Update
+      const { error } = await supabase
+        .from("church_members")
+        .update(form)
+        .eq("id", editingId);
+      if (!error) {
+        setForm({ name_and_surname: "", parish: "", biblical_scripture: "", hymn: "" });
+        setEditingId(null);
+        fetchMembers();
+      }
+    } else {
+      // Insert
+      const { error } = await supabase
+        .from("church_members")
+        .insert([form]);
+      if (!error) {
+        setForm({ name_and_surname: "", parish: "", biblical_scripture: "", hymn: "" });
+        fetchMembers();
+      }
     }
     setLoading(false);
   };
@@ -61,10 +77,14 @@ const ManageMembersPage: React.FC = () => {
     setEditingId(member.id!);
   };
 
+  // Delete member using Supabase
   const handleDelete = async (id: number) => {
     setLoading(true);
-    const res = await fetch(`/api/church-members?id=${id}`, { method: "DELETE" });
-    if (res.ok) fetchMembers();
+    const { error } = await supabase
+      .from("church_members")
+      .delete()
+      .eq("id", id);
+    if (!error) fetchMembers();
     setLoading(false);
   };
 

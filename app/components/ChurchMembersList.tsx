@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+// Add Supabase client import
+import { createClient } from '@supabase/supabase-js';
 
 interface ChurchMember {
   id: number;
@@ -9,32 +11,38 @@ interface ChurchMember {
   church_id: number;
 }
 
-const ChurchMembersList: React.FC = () => {
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
+const ChurchMembersList: React.FC = () => {
   const [search, setSearch] = useState('');
   const [members, setMembers] = useState<ChurchMember[]>([]);
   const [loading, setLoading] = useState(false);
 
-
-
-
+  // Fetch members from Supabase
   const fetchMembers = async (searchTerm: string) => {
     if (!searchTerm.trim()) {
       setMembers([]);
       return;
     }
     setLoading(true);
-    let url = '/api/church-members?search=' + encodeURIComponent(searchTerm);
-    const res = await fetch(url);
-    if (res.ok) {
-      setMembers(await res.json());
-    } else {
+
+    // Supabase query: search by name or parish
+    const { data, error } = await supabase
+      .from('church_members')
+      .select('*')
+      .or(`name_and_surname.ilike.%${searchTerm}%,parish.ilike.%${searchTerm}%`);
+
+    if (error) {
       setMembers([]);
+    } else {
+      setMembers(data as ChurchMember[]);
     }
     setLoading(false);
   };
-
-
 
   // Debounced search effect
   useEffect(() => {
@@ -44,27 +52,42 @@ const ChurchMembersList: React.FC = () => {
     return () => clearTimeout(handler);
   }, [search]);
 
-  // Keep manual search for button (optional, but now redundant)
+  // Manual search for button
   const handleSearch = () => {
     fetchMembers(search);
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg">
-      <div className="flex mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <input
           type="text"
-          className="flex-1 border border-blue-300 rounded-l-lg  py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-          placeholder="Search by name or parish..."
+          className="flex-1 border border-blue-300 rounded-lg py-3 px-4 text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 placeholder:text-blue-400"
+          placeholder="🔍 Search by name or parish..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
         <button
-          className="bg-blue-600 text-whitepx-6 py-2 rounded-r-lg font-semibold hover:bg-blue-700 transition"
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold shadow hover:scale-105 hover:from-blue-600 hover:to-blue-800 transition duration-200"
           onClick={handleSearch}
           disabled={loading}
         >
-          {loading ? 'Searching...' : 'Search'}
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+              Searching...
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <svg className="h-5 w-5" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+              </svg>
+              Search
+            </span>
+          )}
         </button>
       </div>
       <ul className="divide-y divide-blue-100">

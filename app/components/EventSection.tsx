@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { ALL_EVENTS, MONTHS } from '../services/data';
+import { MONTHS } from '../services/data';
+import { createClient } from '@supabase/supabase-js';
 
-const UPCOMING_EVENTS = ALL_EVENTS.filter(event => new Date(event.date) >= new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "<YOUR_SUPABASE_URL>";
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "<YOUR_SUPABASE_ANON_KEY>";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Helper function to format date consistently
 const formatDate = (dateString: string) => {
@@ -18,38 +20,62 @@ const formatDate = (dateString: string) => {
     return `${month}/${day}/${year}`;
 };
 
+// Helper function to format time
+const formatTime = (timeString: string | undefined) => {
+    if (!timeString || typeof timeString !== "string" || !timeString.includes(":")) {
+        return "Time TBA";
+    }
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
+};
+
 export const EventSection = () => {
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+    const [events, setEvents] = useState<any[]>([]);
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined); // Start with undefined
     const [isMounted, setIsMounted] = useState(false);
     const [activeEventIndex, setActiveEventIndex] = useState(0);
 
+    // Fetch events from Supabase
     useEffect(() => {
+        const fetchEvents = async () => {
+            const { data, error } = await supabase
+                .from('events')
+                .select('*')
+                .order('date', { ascending: true });
+            if (error) {
+                console.error("Error fetching events:", error);
+                setEvents([]);
+            } else {
+                setEvents(data || []);
+            }
+        };
+        fetchEvents();
         setIsMounted(true);
-        if (UPCOMING_EVENTS.length > 0) {
-            setSelectedDate(new Date(UPCOMING_EVENTS[0].date));
-        }
     }, []);
 
     useEffect(() => {
-        if (UPCOMING_EVENTS.length > 0) {
+        if (events.length > 0) {
             const interval = setInterval(() => {
-                setActiveEventIndex((prev) => (prev + 1) % UPCOMING_EVENTS.length);
+                setActiveEventIndex((prev) => (prev + 1) % events.length);
             }, 5000);
             return () => clearInterval(interval);
         }
-    }, []);
+    }, [events]);
 
-    // Filter events by selected date
-    const filteredEvents = selectedDate
-        ? UPCOMING_EVENTS.filter(event => {
+    // Show all events if no date is selected, otherwise filter by selected date
+    const filteredEvents = selectedDate === undefined
+        ? events
+        : events.filter(event => {
             const eventDate = new Date(event.date);
             return (
                 eventDate.getFullYear() === selectedDate.getFullYear() &&
                 eventDate.getMonth() === selectedDate.getMonth() &&
                 eventDate.getDate() === selectedDate.getDate()
             );
-        })
-        : UPCOMING_EVENTS;
+        });
 
     const currentDate = new Date();
     const currentMonth = MONTHS[currentDate.getMonth()];
@@ -81,6 +107,16 @@ export const EventSection = () => {
                                     {/* Event Content */}
                                     <div className="relative p-0 sm:p-8 h-full flex flex-col justify-between">
                                         <div>
+                                            {/* Event Image */}
+                                            {filteredEvents[activeEventIndex % filteredEvents.length].image && (
+                                                <div className="mb-6 flex justify-center">
+                                                    <img
+                                                        src={filteredEvents[activeEventIndex % filteredEvents.length].image}
+                                                        alt={filteredEvents[activeEventIndex % filteredEvents.length].title}
+                                                        className="max-h-56 rounded-xl object-cover shadow"
+                                                    />
+                                                </div>
+                                            )}
                                             <div className="flex items-center justify-between mb-6">
                                                 <span className={cn(
                                                     "px-4 py-2 rounded-full text-white text-sm font-medium",
@@ -125,7 +161,7 @@ export const EventSection = () => {
                                                     <div>
                                                         <p className="text-sm text-gray-500">Time</p>
                                                         <p className="font-semibold text-[#2f3a82]">
-                                                            {filteredEvents[activeEventIndex % filteredEvents.length].time}
+                                                            {formatTime(filteredEvents[activeEventIndex % filteredEvents.length].time)}
                                                         </p>
                                                     </div>
                                                 </div>

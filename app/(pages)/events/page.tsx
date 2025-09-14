@@ -1,10 +1,13 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-// import { motion } from "framer-motion";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { ALL_EVENTS, CATEGORIES } from '../../services/data';
+import { createClient } from '@supabase/supabase-js';
 
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'YOUR_SUPABASE_URL';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Helper function to format date consistently
 const formatDate = (dateString: string) => {
@@ -15,7 +18,10 @@ const formatDate = (dateString: string) => {
     return `${month}/${day}/${year}`;
 };
 
-const formatTime = (timeString: string) => {
+const formatTime = (timeString: string | undefined) => {
+    if (!timeString || typeof timeString !== "string" || !timeString.includes(":")) {
+        return "Time TBA";
+    }
     const [hours, minutes] = timeString.split(':');
     const hour = parseInt(hours);
     const ampm = hour >= 12 ? 'PM' : 'AM';
@@ -24,19 +30,59 @@ const formatTime = (timeString: string) => {
 };
 
 export default function EventsPage() {
+    const [categories, setCategories] = useState<string[]>(["All"]);
+    const [events, setEvents] = useState<any[]>([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
     const [isMounted, setIsMounted] = useState(false);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         setIsMounted(true);
+
+        const fetchData = async () => {
+            setLoading(true);
+
+            // Fetch categories
+            const { data: catData, error: catError } = await supabase
+                .from('categories')
+                .select('name');
+            if (catData) {
+                setCategories(["All", ...catData.map((c: any) => c.name)]);
+            }
+
+            // Fetch events with all columns matching your static structure
+            const { data: eventData, error: eventError } = await supabase
+                .from('events')
+                .select(`
+                    id,
+                    title,
+                    date,
+                    time,
+                    location,
+                    description,
+                    category,
+                    image,
+                    featured,
+                    color
+                `);
+            if (eventError) {
+                console.error("Error fetching events:", eventError);
+            }
+            if (eventData) {
+                setEvents(eventData);
+            }
+            setLoading(false);
+        };
+
+        fetchData();
     }, []);
 
     // Filter events by selected date and category
     const filteredEvents = (!selectedDate && selectedCategory === "All")
-        ? ALL_EVENTS
-        : ALL_EVENTS.filter(event => {
+        ? events
+        : events.filter(event => {
             const categoryMatch = selectedCategory === "All" || event.category === selectedCategory;
             let dateMatch = true;
             if (selectedDate) {
@@ -73,7 +119,7 @@ export default function EventsPage() {
                     <div className="mb-6">
                         <h4 className="text-lg font-semibold mb-2">Category</h4>
                         <div className="space-y-2">
-                            {CATEGORIES.map(category => (
+                            {categories.map(category => (
                                 <button
                                     key={category}
                                     onClick={() => { setSelectedCategory(category); setShowMobileFilters(false); }}
@@ -134,9 +180,6 @@ export default function EventsPage() {
                         >
                             View Calendar
                         </button>
-                        {/* <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#2f3a82] transition-colors">
-                            Register for Event
-                        </button> */}
                     </div>
                 </div>
             </section>
@@ -149,7 +192,7 @@ export default function EventsPage() {
                         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
                             <h3 className="text-xl font-bold text-[#2f3a82] mb-4">Filter by Category</h3>
                             <div className="space-y-2">
-                                {CATEGORIES.map(category => (
+                                {categories.map(category => (
                                     <button
                                         key={category}
                                         onClick={() => setSelectedCategory(category)}
@@ -212,8 +255,8 @@ export default function EventsPage() {
                                         <div key={event.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                                             <div className="relative h-48">
                                                 <img 
-                                                    src={event.image} 
-                                                    alt={event.title}
+                                                    src={event.image || "/placeholder.jpg"} // fallback image
+                                                    alt={event.title || "Event image"}
                                                     className="w-full h-full object-cover"
                                                 />
                                                 <div className="absolute top-4 left-4">
@@ -239,9 +282,6 @@ export default function EventsPage() {
                                                     <span>{event.location}</span>
                                                 </div>
                                                 <p className="text-gray-700 mb-4">{event.description}</p>
-                                                {/* <button className="w-full bg-[#2f3a82] text-white px-4 py-2 rounded-lg hover:bg-[#22306a] transition-colors font-semibold">
-                                                    Register Now
-                                                </button> */}
                                             </div>
                                         </div>
                                     ))}
@@ -254,15 +294,19 @@ export default function EventsPage() {
                             <h2 className="text-3xl font-bold text-[#2f3a82] mb-6">
                                 {selectedCategory === "All" ? "All Events" : `${selectedCategory} Events`}
                             </h2>
-                            {regularEvents.length > 0 ? (
+                            {loading ? (
+                                <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+                                    <div className="text-2xl mb-4">Loading events...</div>
+                                </div>
+                            ) : regularEvents.length > 0 ? (
                                 <div className="space-y-6">
                                     {regularEvents.map(event => (
                                         <div key={event.id} className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                                             <div className="flex flex-col md:flex-row gap-6">
                                                 <div className="md:w-48 h-32 md:h-auto">
                                                     <img 
-                                                        src={event.image} 
-                                                        alt={event.title}
+                                                        src={event.image || "/placeholder.jpg"} // fallback image
+                                                        alt={event.title || "Event image"}
                                                         className="w-full h-full object-cover rounded-lg"
                                                     />
                                                 </div>
@@ -351,7 +395,6 @@ export default function EventsPage() {
                     &copy; {new Date().getFullYear()} Pretoria Circuit. All rights reserved.
                 </footer>
             </section>
-               
-                </div>
-        );
+        </div>
+    );
 }

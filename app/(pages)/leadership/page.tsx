@@ -1,12 +1,14 @@
-
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { leadershipTeam, additionalleaders } from "../../services/data";
-import ChurchMembersList from "@/app/components/ChurchMembersList";
+import dynamic from "next/dynamic";
 
-
+const ChurchMembersList = dynamic(
+  () => import("@/app/components/ChurchMembersList"),
+  { ssr: false }
+);
 
 const LeadershipPage = () => {
   return (

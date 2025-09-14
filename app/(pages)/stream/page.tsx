@@ -1,21 +1,57 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import { FaYoutube, FaInstagram } from 'react-icons/fa';
+import { supabase } from "@/lib/supabaseClient";
 
 export default function StreamPage() {
   const PLACEHOLDER_VIDEO_ID = 'dmYiBjbA5tg';
   const [newsletterEmail, setNewsletterEmail] = React.useState('');
   const [newsletterMsg, setNewsletterMsg] = React.useState('');
+  const [verse, setVerse] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [year, setYear] = useState<number | null>(null);
+
+  // Fetch current word of the month
+  useEffect(() => {
+    const fetchWord = async () => {
+      const { data } = await supabase
+        .from("word_of_month")
+        .select("*")
+        .order("updated_at", { ascending: false })
+        .limit(1);
+      if (data && data.length > 0) {
+        setVerse(data[0].verse);
+        setMessage(data[0].message);
+      }
+    };
+    fetchWord();
+  }, []);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
+  // Update word of the month
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    await supabase
+      .from("word_of_month")
+      .insert([{ verse, message, updated_at: new Date().toISOString() }]);
+    setLoading(false);
+    alert("Word of the Month updated!");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e1c575]/30 via-white to-[#2f3a82]/10 flex flex-col items-center py-10 px-4 lg:px-25 w-full">
       {/* Word of the Month */}
       <section className="w-full max-w-5xl mb-10 p-8 rounded-3xl bg-gradient-to-r from-[#e1c575] to-[#2f3a82] shadow-2xl text-white text-center mx-auto relative overflow-hidden">
-        <div className="absolute left-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -z-10" />
-        <div className="absolute right-0 bottom-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -z-10" />
-        <h2 className="text-4xl font-extrabold mb-3 tracking-wide drop-shadow-lg">Word of the Month</h2>
-        <p className="text-xl italic mb-2 max-w-2xl mx-auto drop-shadow">"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God."</p>
-        <span className="block font-bold text-lg tracking-wider mt-2">Philippians 4:6</span>
+      <div className="absolute left-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -z-10" />
+      <div className="absolute right-0 bottom-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -z-10" />
+      <h2 className="text-4xl font-extrabold mb-3 tracking-wide drop-shadow-lg">Word of the Month</h2>
+      <p className="text-xl italic mb-2 max-w-2xl mx-auto drop-shadow">{message || "Loading..."}</p>
+      <span className="block font-bold text-lg tracking-wider mt-2">{verse || "Loading..."}</span>
       </section>
 
       {/* Live Sermon Stream */}
@@ -96,10 +132,13 @@ export default function StreamPage() {
         </div>
       </section>
 
+      {/* Admin Section - Manage Word of the Month */}
+      
+
       {/* Footer */}
-        <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
-          &copy; {new Date().getFullYear()} Pretoria Circuit. All rights reserved.
-        </footer>
+      <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
+        &copy; {year ?? ""} Pretoria Circuit. All rights reserved.
+      </footer>
     </div>
   );
 }
