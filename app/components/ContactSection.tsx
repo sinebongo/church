@@ -18,9 +18,9 @@ const ContactSection = () => {
           <button type="submit" className="bg-[#2f3a82] hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition">Send Message</button>
         </form>
       </div>
-       <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
-                    &copy; {new Date().getFullYear()} Pretoria Circuit. All rights reserved.
-                </footer>
+      <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
+    &copy; {new Date().getFullYear()} ELCSA CDYL. All rights reserved.
+</footer>
     </section>
   );
 };

@@ -137,7 +137,7 @@ export default function StreamPage() {
 
       {/* Footer */}
       <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
-        &copy; {year ?? ""} Pretoria Circuit. All rights reserved.
+        &copy; {year ?? ""} ELCSA CDYL. All rights reserved.
       </footer>
     </div>
   );

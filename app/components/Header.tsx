@@ -65,7 +65,7 @@ export const Header = () => {
                 className="text-4xl md:text-6xl font-bold drop-shadow-lg md:w-2/3 animate-fade-in uppercase"
                 style={{ animation: 'fadeInDown 1s ease' }}
             >
-                Evangelical Lutheran Church in South Africa
+                Evangelical Lutheran Church in Southern Africa
                 <br />
             </h1>
             <p

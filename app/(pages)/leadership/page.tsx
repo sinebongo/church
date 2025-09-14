@@ -125,7 +125,7 @@ const LeadershipPage = () => {
         </div>
 
         <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
-          &copy; {new Date().getFullYear()} Pretoria Circuit. All rights reserved.
+          &copy; {new Date().getFullYear()} ELCSA CDYL. All rights reserved.
         </footer>
       </div>
     </motion.div>
