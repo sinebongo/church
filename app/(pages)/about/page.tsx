@@ -66,9 +66,7 @@ export default function About() {
                 <p>1475</p>    </div>
             </div>
             <div className="bg-white rounded-lg p-6 text-center hover:shadow-lg transition-shadow border-2 border-[#2f3a82]/10 hover:border-[#2f3a82]/30">
-            <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
-              &copy; {new Date().getFullYear()} Pretoria Circuit. All rights reserved.
-            </footer>
+           
               <div className="w-12 h-12 bg-[#2f3a82] rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
