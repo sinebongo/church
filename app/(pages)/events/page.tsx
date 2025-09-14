@@ -334,9 +334,7 @@ export default function EventsPage() {
                                                         </div>
                                                     </div>
                                                     <p className="text-gray-700 mb-4">{event.description}</p>
-                                                    <button className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg hover:bg-[#22306a] transition-colors font-semibold">
-                                                        Learn More
-                                                    </button>
+                                                   
                                                 </div>
                                             </div>
                                         </div>
