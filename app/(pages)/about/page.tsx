@@ -164,7 +164,7 @@ export default function About() {
               Social Media Announcement
             </DownloadButton>
             <DownloadButton href="/documents/elcsa_by-laws_20102-edited-09-2011.pdf">
-              ELCSA Youth League By-Laws (2010/2011)
+              ELCSA By-Laws (2010/2011)
             </DownloadButton>
             <DownloadButton href="/documents/ELCSA-CONSTITUTION-AMMENDED-SEPTEMBER-2011-THE-FINAL-ONE-WITHOUTH-SIGNATURES-PAGE-3-.pdf">
               ELCSA Constitution (Amended September 2011)

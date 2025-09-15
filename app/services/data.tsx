@@ -11,7 +11,7 @@ export const additionalleaders = [
     { role: "Southern Mission Circuit Chairperson", name: "Boitumelo Tshukudu", img: "/boitumelo.jpg" },
     { role: "Eastern Circuit Chairperson", name: "Lwazi Makapola", img: "/lwazi.jpg" },
     { role: "Eastern Circuit Secretary", name: "Palesa Mosholi", img: "/palesa.jpg" },
-    { role: "Pretoria Chairperson", name: "Mpumelelo Sibanyoni", img: "/mpumelelo.jpg" },
+    { role: "Pretoria Circuit Chairperson", name: "Mpumelelo Sibanyoni", img: "/mpumelelo.jpg" },
     { role: "Western Circuit Chairperson", name: "Mpho Seboka", img: "/mpho.jpg" },
     { role: "Western Circuit Secretary", name: "Lesego Mkhabela", img: "/lesego.jpg" },
     { role: "Soweto Circuit Chairperson", name: "Mapula Ramahlo", img: "/mapula.jpg" },
