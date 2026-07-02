@@ -3,6 +3,7 @@ import { Inter, Lora } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "./components/NavBar";
 import { Footer } from "./components/Footer";
+import { WhatsAppButton } from "./components/WhatsAppButton";
 import { ContentProvider } from "./context/ContentProvider";
 
 const inter = Inter({
@@ -34,6 +35,7 @@ export default function RootLayout({
           <NavBar/>
           {children}
           <Footer />
+          <WhatsAppButton />
         </ContentProvider>
       </body>
     </html>

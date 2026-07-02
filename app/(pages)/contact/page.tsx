@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { FaTiktok, FaInstagram, FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaTiktok, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import { PageHero } from "@/app/components/PageHero";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -75,6 +75,14 @@ export default function ContactPage() {
             <span className="hidden sm:inline">|</span>
             <a href="https://www.youtube.com/@ELCSACentralDioceseYouthLeague" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
               <FaYoutube className="text-xl" /> <span className="hidden sm:inline">YouTube:</span> @ ELCSA Central Diocese Youth League
+            </a>
+            <span className="hidden sm:inline">|</span>
+            <a href="https://www.tiktok.com/@elcsa.central.dio" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+              <FaTiktok className="text-xl" /> <span className="hidden sm:inline">TikTok:</span> @elcsa.central.dio
+            </a>
+            <span className="hidden sm:inline">|</span>
+            <a href="https://www.facebook.com/61576120504510" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+              <FaFacebook className="text-xl" /> <span className="hidden sm:inline">Facebook:</span> ELCSA Central Diocese YL
             </a>
           </div>
         </section>

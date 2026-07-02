@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaYoutube, FaInstagram } from 'react-icons/fa';
+import { FaYoutube, FaInstagram, FaTiktok, FaFacebook } from 'react-icons/fa';
 import { supabase } from "@/lib/supabaseClient";
 
 interface LiveStatus {
@@ -142,6 +142,12 @@ export default function StreamPage() {
               </a>
               <a href="https://www.instagram.com/elcsacdyl/" className="text-navy hover:text-gold text-2xl flex items-center gap-2" aria-label="Instagram">
                 <FaInstagram /> <span className="hidden sm:inline">Instagram</span>
+              </a>
+              <a href="https://www.tiktok.com/@elcsa.central.dio" className="text-navy hover:text-gold text-2xl flex items-center gap-2" aria-label="TikTok">
+                <FaTiktok /> <span className="hidden sm:inline">TikTok</span>
+              </a>
+              <a href="https://www.facebook.com/61576120504510" className="text-navy hover:text-gold text-2xl flex items-center gap-2" aria-label="Facebook">
+                <FaFacebook /> <span className="hidden sm:inline">Facebook</span>
               </a>
             </div>
           </div>

@@ -13,6 +13,7 @@ const links = [
   { href: "/admin/members", label: "Members" },
   { href: "/admin/leadership", label: "Leadership" },
   { href: "/admin/word-of-month", label: "Word of the Month" },
+  { href: "/admin/documents", label: "Documents" },
   { href: "/admin/content", label: "Site Content" },
 ];
 

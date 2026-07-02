@@ -72,6 +72,27 @@ export default function AdminEventsPage() {
     setRsvpsLoading(false);
   };
 
+  const exportRsvpsCsv = (eventTitle: string) => {
+    const headers = ["Name", "Email", "Phone", "Party Size", "Notes", "Registered At"];
+    const rows = rsvps.map((r) => [
+      r.full_name,
+      r.email,
+      r.phone || "",
+      r.party_size,
+      r.notes || "",
+      new Date(r.created_at).toLocaleString(),
+    ]);
+    const escapeCell = (cell: unknown) => `"${String(cell).replace(/"/g, '""')}"`;
+    const csv = [headers, ...rows].map((row) => row.map(escapeCell).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${eventTitle.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-rsvps.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const deleteRsvp = async (id: number) => {
     const { error } = await supabase.from("event_rsvps").delete().eq("id", id);
     if (error) {
@@ -250,9 +271,20 @@ export default function AdminEventsPage() {
       <Dialog open={rsvpEventId !== null} onOpenChange={(open) => !open && setRsvpEventId(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>
-              RSVPs for {events.find((e) => e.id === rsvpEventId)?.title}
-            </DialogTitle>
+            <div className="flex items-center justify-between gap-4">
+              <DialogTitle>
+                RSVPs for {events.find((e) => e.id === rsvpEventId)?.title}
+              </DialogTitle>
+              {rsvps.length > 0 && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => exportRsvpsCsv(events.find((e) => e.id === rsvpEventId)?.title ?? "event")}
+                >
+                  Export CSV
+                </Button>
+              )}
+            </div>
           </DialogHeader>
           {rsvpsLoading ? (
             <p className="text-muted-foreground">Loading...</p>

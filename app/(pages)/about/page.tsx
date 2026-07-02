@@ -2,11 +2,29 @@
 
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import DownloadButton from "../../components/DownloadButton";
 import { PageHero } from "@/app/components/PageHero";
+import { supabase } from "@/lib/supabaseClient";
+
+interface Doc {
+  id: number;
+  title: string;
+  file_url: string;
+}
 
 export default function About() {
+  const [documents, setDocuments] = useState<Doc[]>([]);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      const { data } = await supabase.from("documents").select("*").order("sort_order", { ascending: true });
+      if (data) setDocuments(data);
+    };
+    fetchDocuments();
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -156,21 +174,11 @@ export default function About() {
             Access important documents and resources for the Central Diocese Youth League.
           </p>
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-center gap-4">
-            <DownloadButton href="/documents/CCDYL_SOCIAL_MEDIA_ANNOUNCEMENT.pdf">
-              Social Media Announcement
-            </DownloadButton>
-            <DownloadButton href="/documents/elcsa_by-laws_20102-edited-09-2011.pdf">
-              ELCSA By-Laws (2010/2011)
-            </DownloadButton>
-            <DownloadButton href="/documents/ELCSA-CONSTITUTION-AMMENDED-SEPTEMBER-2011-THE-FINAL-ONE-WITHOUTH-SIGNATURES-PAGE-3-.pdf">
-              ELCSA Constitution (Amended September 2011)
-            </DownloadButton>
-            <DownloadButton href="/documents/Probation_Booklet_DC-3_011837.pdf">
-              Probation Booklet
-            </DownloadButton>
-            <DownloadButton href="/documents/Signed_ELCSA_Youth_League_Constitution-1.pdf">
-              Signed ELCSA Youth League Constitution
-            </DownloadButton>
+            {documents.map((doc) => (
+              <DownloadButton key={doc.id} href={doc.file_url}>
+                {doc.title}
+              </DownloadButton>
+            ))}
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ import LeadershipSection from "./components/LeadershipSection";
 
 import ContactSection from "./components/ContactSection";
 import { Background3D } from "./components/Background3D";
-import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaYoutube, FaTiktok, FaFacebook } from "react-icons/fa";
 
 export default function Home() {
   return (
@@ -28,6 +28,12 @@ export default function Home() {
             </a>
             <a href="https://www.youtube.com/@ELCSACentralDioceseYouthLeague" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded hover:bg-white/20 transition">
               <FaYoutube className="text-2xl" /> <span className="hidden sm:inline">YouTube:</span> @ ELCSA Central Diocese Youth League
+            </a>
+            <a href="https://www.tiktok.com/@elcsa.central.dio" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded hover:bg-white/20 transition">
+              <FaTiktok className="text-2xl" /> <span className="hidden sm:inline">TikTok:</span> @elcsa.central.dio
+            </a>
+            <a href="https://www.facebook.com/61576120504510" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded hover:bg-white/20 transition">
+              <FaFacebook className="text-2xl" /> <span className="hidden sm:inline">Facebook:</span> ELCSA Central Diocese YL
             </a>
           </div>
         </div>

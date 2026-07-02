@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaYoutube, FaTiktok, FaFacebook, FaWhatsapp } from "react-icons/fa";
 import { useContent } from "@/app/context/ContentProvider";
 
 export function Footer() {
@@ -13,6 +13,9 @@ export function Footer() {
   const email = useContent("contact.email", "elcsa.cdpyl@gmail.com");
   const instagram = useContent("footer.social_instagram", "https://www.instagram.com/elcsacdyl/");
   const youtube = useContent("footer.social_youtube", "https://www.youtube.com/@ELCSACentralDioceseYouthLeague");
+  const tiktok = useContent("footer.social_tiktok", "https://www.tiktok.com/@elcsa.central.dio");
+  const facebook = useContent("footer.social_facebook", "https://www.facebook.com/61576120504510");
+  const whatsapp = useContent("footer.social_whatsapp", "");
 
   if (pathname?.startsWith("/admin")) return null;
 
@@ -30,25 +33,24 @@ export function Footer() {
           <Link href="/leadership" className="hover:text-gold transition-colors">Leadership</Link>
           <Link href="/contact" className="hover:text-gold transition-colors">Contact</Link>
         </div>
-        <div className="flex items-start gap-4">
-          <a
-            href={instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-            className="hover:text-gold transition-colors text-xl"
-          >
+        <div className="flex items-start flex-wrap gap-4">
+          <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-gold transition-colors text-xl">
             <FaInstagram />
           </a>
-          <a
-            href={youtube}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="YouTube"
-            className="hover:text-gold transition-colors text-xl"
-          >
+          <a href={youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-gold transition-colors text-xl">
             <FaYoutube />
           </a>
+          <a href={tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="hover:text-gold transition-colors text-xl">
+            <FaTiktok />
+          </a>
+          <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-gold transition-colors text-xl">
+            <FaFacebook />
+          </a>
+          {whatsapp && (
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="hover:text-gold transition-colors text-xl">
+              <FaWhatsapp />
+            </a>
+          )}
         </div>
       </div>
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/60">
