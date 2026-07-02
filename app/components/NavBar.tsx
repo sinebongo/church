@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 export const NavBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const pathname = usePathname();
+    if (pathname?.startsWith('/admin')) return null;
     const links = [
         { name: 'Home', href: '/' },
         { name: 'About', href: '/about' },
@@ -14,7 +16,6 @@ export const NavBar = () => {
         { name: 'Leadership', href: '/leadership' },
         { name: 'Contact', href: '/contact' },
     ];
-    const pathname = usePathname();
     const activeIndex = links.findIndex(link => link.href === pathname);
     return (
         <motion.nav 
@@ -35,7 +36,7 @@ export const NavBar = () => {
                         alt="Logo"
                         className="h-8 lg:h-10 mr-3 lg:mr-6"
                     />
-                    <span className="text-[#2f3a82] font-bold text-lg lg:text-2xl">
+                    <span className="text-navy font-bold text-lg lg:text-2xl">
                     ELCSA-CD
                 </span>
                 </a>
@@ -64,7 +65,7 @@ export const NavBar = () => {
                     >
                         <a
                             href={link.href}
-                            className={`text-[#2f3a82] font-semibold text-base px-2 py-1 rounded transition-transform duration-150 inline-block hover:scale-110 ${idx === activeIndex ? 'underline' : 'no-underline'}`}
+                            className={`text-navy font-semibold text-base px-2 py-1 rounded transition-transform duration-150 inline-block hover:scale-110 ${idx === activeIndex ? 'underline' : 'no-underline'}`}
                         >
                             {link.name}
                         </a>
@@ -83,7 +84,7 @@ export const NavBar = () => {
             >
                 <a
                     href="/stream"
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#2f3a82] to-[#e1c575] hover:from-[#e1c575] hover:to-[#2f3a82] text-white font-bold px-5 py-2 rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2f3a82]"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-navy to-gold hover:from-gold hover:to-navy text-white font-bold px-5 py-2 rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy"
                 >
                     <svg
                         className="w-5 h-5"
@@ -106,7 +107,7 @@ export const NavBar = () => {
                 whileTap={{ scale: 0.95 }}
             >
                 <svg 
-                    className="w-6 h-6 text-[#2f3a82]" 
+                    className="w-6 h-6 text-navy" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -135,7 +136,7 @@ export const NavBar = () => {
                                 <motion.a
                                     key={link.name}
                                     href={link.href}
-                                    className={`block text-[#2f3a82] font-semibold text-base px-2 py-3 rounded transition-colors hover:bg-gray-100 ${idx === activeIndex ? 'border-l-4 border-[#2f3a82] bg-gray-50' : ''}`}
+                                    className={`block text-navy font-semibold text-base px-2 py-3 rounded transition-colors hover:bg-gray-100 ${idx === activeIndex ? 'border-l-4 border-navy bg-gray-50' : ''}`}
                                     onClick={() => {
                                         setIsMenuOpen(false);
                                     }}
@@ -164,7 +165,7 @@ export const NavBar = () => {
                                 }}
                             >
                                 <button
-                                    className="w-full bg-[#2f3a82] hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
+                                    className="w-full bg-navy hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
                                     onClick={() => {
                                         setIsMenuOpen(false);
                                         window.location.href = '/stream';

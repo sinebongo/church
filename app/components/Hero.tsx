@@ -1,10 +1,21 @@
-import React from 'react'
+'use client'
+
+import React, { useRef, useEffect } from 'react'
 import { Header } from './Header'
 
 export const Hero = () => {
+    const videoRef = useRef<HTMLVideoElement>(null)
+
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.playbackRate = 0.6
+        }
+    }, [])
+
     return (
         <div className="relative h-[100vh] w-full overflow-x-hidden overflow-hidden">
             <video
+                ref={videoRef}
                 autoPlay
                 loop
                 muted

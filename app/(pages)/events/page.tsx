@@ -1,8 +1,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
+import { cn, toLocalDateString } from "@/lib/utils";
 import { createClient } from '@supabase/supabase-js';
+import { RsvpDialog } from "@/app/components/RsvpDialog";
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'YOUR_SUPABASE_URL';
@@ -43,37 +44,44 @@ export default function EventsPage() {
 
         const fetchData = async () => {
             setLoading(true);
+            try {
+                // Fetch categories
+                const { data: catData, error: catError } = await supabase
+                    .from('categories')
+                    .select('name');
+                if (catError) {
+                    console.error("Error fetching categories:", catError);
+                }
+                if (catData) {
+                    setCategories(["All", ...catData.map((c: any) => c.name)]);
+                }
 
-            // Fetch categories
-            const { data: catData, error: catError } = await supabase
-                .from('categories')
-                .select('name');
-            if (catData) {
-                setCategories(["All", ...catData.map((c: any) => c.name)]);
+                // Fetch events with all columns matching your static structure
+                const { data: eventData, error: eventError } = await supabase
+                    .from('events')
+                    .select(`
+                        id,
+                        title,
+                        date,
+                        time,
+                        location,
+                        description,
+                        category,
+                        image,
+                        featured,
+                        color
+                    `);
+                if (eventError) {
+                    console.error("Error fetching events:", eventError);
+                }
+                if (eventData) {
+                    setEvents(eventData);
+                }
+            } catch (err) {
+                console.error("Error fetching events:", err);
+            } finally {
+                setLoading(false);
             }
-
-            // Fetch events with all columns matching your static structure
-            const { data: eventData, error: eventError } = await supabase
-                .from('events')
-                .select(`
-                    id,
-                    title,
-                    date,
-                    time,
-                    location,
-                    description,
-                    category,
-                    image,
-                    featured,
-                    color
-                `);
-            if (eventError) {
-                console.error("Error fetching events:", eventError);
-            }
-            if (eventData) {
-                setEvents(eventData);
-            }
-            setLoading(false);
         };
 
         fetchData();
@@ -84,15 +92,7 @@ export default function EventsPage() {
         ? events
         : events.filter(event => {
             const categoryMatch = selectedCategory === "All" || event.category === selectedCategory;
-            let dateMatch = true;
-            if (selectedDate) {
-                const eventDate = new Date(event.date);
-                dateMatch = (
-                    eventDate.getFullYear() === selectedDate.getFullYear() &&
-                    eventDate.getMonth() === selectedDate.getMonth() &&
-                    eventDate.getDate() === selectedDate.getDate()
-                );
-            }
+            const dateMatch = !selectedDate || event.date === toLocalDateString(selectedDate);
             return categoryMatch && dateMatch;
         });
 
@@ -109,12 +109,12 @@ export default function EventsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="min-h-screen bg-gradient-to-b from-cream to-white">
             {/* Mobile Filter Modal */}
             <div className={`fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center ${showMobileFilters ? '' : 'hidden'}`}>
                 <div className="bg-white rounded-2xl shadow-2xl p-6 w-11/12 max-w-sm relative">
                     <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl" onClick={() => setShowMobileFilters(false)}>&times;</button>
-                    <h3 className="text-xl font-bold text-[#2f3a82] mb-4">Filters</h3>
+                    <h3 className="text-xl font-bold text-navy mb-4">Filters</h3>
                     {/* Category Filter */}
                     <div className="mb-6">
                         <h4 className="text-lg font-semibold mb-2">Category</h4>
@@ -126,7 +126,7 @@ export default function EventsPage() {
                                     className={cn(
                                         "w-full text-left px-4 py-2 rounded-lg transition-colors font-medium",
                                         selectedCategory === category
-                                            ? "bg-[#2f3a82] text-white"
+                                            ? "bg-navy text-white"
                                             : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                     )}
                                 >
@@ -145,9 +145,9 @@ export default function EventsPage() {
                                 onSelect={date => { setSelectedDate(date); setShowMobileFilters(false); }}
                                 className="w-full mb-2"
                                 classNames={{
-                                    day_selected: "bg-[#2f3a82] text-white hover:bg-[#2f3a82] hover:text-white focus:bg-[#2f3a82] focus:text-white",
+                                    day_selected: "bg-navy text-white hover:bg-navy hover:text-white focus:bg-navy focus:text-white",
                                     day_today: "bg-gray-100 text-gray-900 font-semibold",
-                                    caption_label: "text-[#2f3a82] font-semibold",
+                                    caption_label: "text-navy font-semibold",
                                 }}
                             />
                         )}
@@ -163,19 +163,20 @@ export default function EventsPage() {
                 </div>
             </div>
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-r from-[#2f3a82] to-blue-600 text-white py-20">
-                <div className="absolute inset-0 bg-black opacity-20"></div>
+            <section className="relative overflow-hidden bg-gradient-to-br from-navy to-navy-dark text-white py-20">
+                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-gold-dark via-gold to-gold-dark" />
                 <div className="relative max-w-7xl mx-auto px-4 text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                    <p className="uppercase tracking-widest text-gold text-sm font-medium mb-3">Events</p>
+                    <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6">
                         Church Events
                     </h1>
-                    <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-                        Join us for worship, fellowship, and community service. 
+                    <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-white/80">
+                        Join us for worship, fellowship, and community service.
                         There's something for everyone in our church family.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button 
-                            className="bg-white text-[#2f3a82] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                        <button
+                            className="bg-white text-navy px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
                             onClick={handleScrollToCalendar}
                         >
                             View Calendar
@@ -190,7 +191,7 @@ export default function EventsPage() {
                     <div className="lg:col-span-1 hidden lg:block">
                         {/* Category Filter */}
                         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                            <h3 className="text-xl font-bold text-[#2f3a82] mb-4">Filter by Category</h3>
+                            <h3 className="text-xl font-bold text-navy mb-4">Filter by Category</h3>
                             <div className="space-y-2">
                                 {categories.map(category => (
                                     <button
@@ -199,7 +200,7 @@ export default function EventsPage() {
                                         className={cn(
                                             "w-full text-left px-4 py-2 rounded-lg transition-colors font-medium",
                                             selectedCategory === category
-                                                ? "bg-[#2f3a82] text-white"
+                                                ? "bg-navy text-white"
                                                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                         )}
                                     >
@@ -210,7 +211,7 @@ export default function EventsPage() {
                         </div>
                         {/* Calendar */}
                         <div className="bg-white rounded-2xl shadow-lg p-6" ref={calendarRef} id="calendar-section">
-                            <h3 className="text-xl font-bold text-[#2f3a82] mb-4">Event Calendar</h3>
+                            <h3 className="text-xl font-bold text-navy mb-4">Event Calendar</h3>
                             {isMounted && (
                                 <Calendar
                                     mode="single"
@@ -218,9 +219,9 @@ export default function EventsPage() {
                                     onSelect={setSelectedDate}
                                     className="w-full"
                                     classNames={{
-                                        day_selected: "bg-[#2f3a82] text-white hover:bg-[#2f3a82] hover:text-white focus:bg-[#2f3a82] focus:text-white",
+                                        day_selected: "bg-navy text-white hover:bg-navy hover:text-white focus:bg-navy focus:text-white",
                                         day_today: "bg-gray-100 text-gray-900 font-semibold",
-                                        caption_label: "text-[#2f3a82] font-semibold",
+                                        caption_label: "text-navy font-semibold",
                                     }}
                                 />
                             )}
@@ -240,7 +241,7 @@ export default function EventsPage() {
                         {/* Mobile Filter Button */}
                         <div className="mb-6 lg:hidden flex justify-end">
                             <button
-                                className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#22306a] transition-colors"
+                                className="bg-navy text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#22306a] transition-colors"
                                 onClick={() => setShowMobileFilters(true)}
                             >
                                 Filter Events
@@ -249,10 +250,10 @@ export default function EventsPage() {
                         {/* Featured Events */}
                         {featuredEvents.length > 0 && (
                             <div className="mb-12">
-                                <h2 className="text-3xl font-bold text-[#2f3a82] mb-6">Featured Events</h2>
+                                <h2 className="text-3xl font-bold text-navy mb-6">Featured Events</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {featuredEvents.map(event => (
-                                        <div key={event.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                                        <div key={event.id} className="bg-white rounded-2xl border border-navy/15 overflow-hidden transition-colors hover:border-gold">
                                             <div className="relative h-48">
                                                 <img 
                                                     src={event.image || "/placeholder.jpg"} // fallback image
@@ -260,13 +261,13 @@ export default function EventsPage() {
                                                     className="w-full h-full object-cover"
                                                 />
                                                 <div className="absolute top-4 left-4">
-                                                    <span className="bg-[#2f3a82] text-white px-3 py-1 rounded-full text-sm font-medium">
+                                                    <span className="bg-navy text-white px-3 py-1 rounded-full text-sm font-medium">
                                                         {event.category}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div className="p-6">
-                                                <h3 className="text-xl font-bold text-[#2f3a82] mb-2">{event.title}</h3>
+                                                <h3 className="text-xl font-bold text-navy mb-2">{event.title}</h3>
                                                 <div className="flex items-center text-gray-600 mb-4 space-x-4">
                                                     <div className="flex items-center">
                                                         <span className="mr-2">📅</span>
@@ -282,6 +283,7 @@ export default function EventsPage() {
                                                     <span>{event.location}</span>
                                                 </div>
                                                 <p className="text-gray-700 mb-4">{event.description}</p>
+                                                <RsvpDialog eventId={event.id} eventTitle={event.title} />
                                             </div>
                                         </div>
                                     ))}
@@ -291,17 +293,17 @@ export default function EventsPage() {
 
                         {/* Regular Events */}
                         <div>
-                            <h2 className="text-3xl font-bold text-[#2f3a82] mb-6">
+                            <h2 className="text-3xl font-bold text-navy mb-6">
                                 {selectedCategory === "All" ? "All Events" : `${selectedCategory} Events`}
                             </h2>
                             {loading ? (
-                                <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+                                <div className="bg-white rounded-2xl border border-navy/15 p-12 text-center">
                                     <div className="text-2xl mb-4">Loading events...</div>
                                 </div>
                             ) : regularEvents.length > 0 ? (
                                 <div className="space-y-6">
                                     {regularEvents.map(event => (
-                                        <div key={event.id} className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                                        <div key={event.id} className="bg-white rounded-2xl border border-navy/15 p-6 transition-colors hover:border-gold">
                                             <div className="flex flex-col md:flex-row gap-6">
                                                 <div className="md:w-48 h-32 md:h-auto">
                                                     <img 
@@ -313,7 +315,7 @@ export default function EventsPage() {
                                                 <div className="flex-1">
                                                     <div className="flex items-start justify-between mb-4">
                                                         <div>
-                                                            <h3 className="text-xl font-bold text-[#2f3a82] mb-2">{event.title}</h3>
+                                                            <h3 className="text-xl font-bold text-navy mb-2">{event.title}</h3>
                                                             <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
                                                                 {event.category}
                                                             </span>
@@ -334,19 +336,19 @@ export default function EventsPage() {
                                                         </div>
                                                     </div>
                                                     <p className="text-gray-700 mb-4">{event.description}</p>
-                                                   
+                                                    <RsvpDialog eventId={event.id} eventTitle={event.title} />
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+                                <div className="bg-white rounded-2xl border border-navy/15 p-12 text-center">
                                     <div className="text-6xl mb-4">📅</div>
-                                    <h3 className="text-2xl font-bold text-[#2f3a82] mb-2">No Events Found</h3>
+                                    <h3 className="text-2xl font-bold text-navy mb-2">No Events Found</h3>
                                     <p className="text-gray-600 mb-6">
                                         {selectedDate 
-                                            ? `No events scheduled for ${formatDate(selectedDate.toISOString().split('T')[0])}`
+                                            ? `No events scheduled for ${formatDate(toLocalDateString(selectedDate))}`
                                             : selectedCategory === "All" 
                                                 ? "No events are currently scheduled."
                                                 : `No ${selectedCategory.toLowerCase()} events are currently scheduled.`
@@ -357,7 +359,7 @@ export default function EventsPage() {
                                             setSelectedCategory("All");
                                             setSelectedDate(undefined);
                                         }}
-                                        className="bg-[#2f3a82] text-white px-6 py-2 rounded-lg hover:bg-[#22306a] transition-colors font-semibold"
+                                        className="bg-navy text-white px-6 py-2 rounded-lg hover:bg-[#22306a] transition-colors font-semibold"
                                     >
                                         View All Events
                                     </button>
@@ -369,7 +371,7 @@ export default function EventsPage() {
             </div>
 
             {/* Call to Action */}
-            <section className="bg-[#2f3a82] text-white py-16">
+            <section className="bg-navy text-white py-16">
                 <div className="max-w-4xl mx-auto px-4 text-center">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">
                         Stay Connected
@@ -384,14 +386,11 @@ export default function EventsPage() {
                             placeholder="elcsa.cdpyl@gmail.com"
                             className="flex-1 px-4 py-3 rounded-lg text-gray-800 focus:outline-none ring-2 ring-white focus:ring-2 focus:ring-white"
                         />
-                        <button className="bg-white text-[#2f3a82] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        <button className="bg-white text-navy px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                             Subscribe
                         </button>
                     </div>
                 </div>
-                <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
-    &copy; {new Date().getFullYear()} ELCSA CDYL. All rights reserved.
-</footer>
             </section>
         </div>
     );

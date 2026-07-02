@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { useContent } from '@/app/context/ContentProvider'
 
 // const NEXT_STREAM_DATE = new Date('2025-07-07T10:00:00+02:00') // Set your next stream date/time here
 function getNextStreamDate(): Date {
@@ -43,6 +44,8 @@ function getTimeRemaining(target: Date) {
 }
 
 export const Header = () => {
+    const heroTitle = useContent('hero.title', 'Evangelical Lutheran Church in Southern Africa');
+    const heroSubtitle = useContent('hero.subtitle', 'Central Diocese Prayer Youth League');
 
     const [nextStreamDate, setNextStreamDate] = useState<Date | null>(null);
     const [timeLeft, setTimeLeft] = useState<{ total: number, days: number, hours: number, minutes: number, seconds: number } | null>(null);
@@ -62,17 +65,17 @@ export const Header = () => {
     return (
         <div className="relative z-[3] h-full flex flex-col justify-center items-center text-white text-center px-4 w-full overflow-x-hidden">
             <h1
-                className="text-4xl md:text-6xl font-bold drop-shadow-lg md:w-2/3 animate-fade-in uppercase"
+                className="font-serif text-4xl md:text-6xl font-bold drop-shadow-lg md:w-2/3 animate-fade-in uppercase"
                 style={{ animation: 'fadeInDown 1s ease' }}
             >
-                Evangelical Lutheran Church in Southern Africa
+                {heroTitle}
                 <br />
             </h1>
             <p
                 className="mt-4 text-lg md:text-2xl animate-fade-in"
                 style={{ animation: 'fadeInUp 1.5s ease' }}
             >
-                Central Diocese Prayer Youth League
+                {heroSubtitle}
             </p>
             <div
                 className="mt-6 animate-fade-in"
@@ -113,7 +116,7 @@ export const Header = () => {
             </div>
             <a
                 href="/stream"
-                className="mt-8 px-6 py-2 bg-gradient-to-r from-[#2f3a82] to-[#e1c575] text-white font-semibold rounded-full shadow-md transition-transform duration-200 hover:scale-105 hover:from-[#e1c575] hover:to-[#2f3a82] border border-white/20 animate-fade-in inline-block text-center"
+                className="mt-8 px-6 py-2 bg-gradient-to-r from-navy to-gold text-white font-semibold rounded-full shadow-md transition-transform duration-200 hover:scale-105 hover:from-gold hover:to-navy border border-white/20 animate-fade-in inline-block text-center"
                 style={{
                     animation: 'fadeIn 2s ease',
                 }}

@@ -12,7 +12,7 @@ export default function DownloadButton({ href, children, className = "" }: Downl
       href={href}
       download
       className={
-        "bg-[#e1c575] text-[#2f3a82] px-8 py-3 rounded-lg font-semibold hover:bg-[#e1c575]/90 transition-colors w-full max-w-xs flex items-center justify-center " +
+        "bg-gold text-navy px-8 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors w-full max-w-xs flex items-center justify-center " +
         className
       }
     >

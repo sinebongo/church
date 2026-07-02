@@ -3,14 +3,20 @@ import React, { useState, useEffect } from "react";
 import { FaYoutube, FaInstagram } from 'react-icons/fa';
 import { supabase } from "@/lib/supabaseClient";
 
+interface LiveStatus {
+  configured: boolean;
+  isLive: boolean;
+  videoId?: string;
+  channelUrl?: string;
+}
+
 export default function StreamPage() {
-  const PLACEHOLDER_VIDEO_ID = 'dmYiBjbA5tg';
   const [newsletterEmail, setNewsletterEmail] = React.useState('');
   const [newsletterMsg, setNewsletterMsg] = React.useState('');
   const [verse, setVerse] = useState("");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [year, setYear] = useState<number | null>(null);
+  const [liveStatus, setLiveStatus] = useState<LiveStatus | null>(null);
+  const [checkingLive, setCheckingLive] = useState(true);
 
   // Fetch current word of the month
   useEffect(() => {
@@ -28,25 +34,26 @@ export default function StreamPage() {
     fetchWord();
   }, []);
 
+  // Check whether the church's YouTube channel is currently live
   useEffect(() => {
-    setYear(new Date().getFullYear());
+    const checkLive = async () => {
+      try {
+        const res = await fetch("/api/youtube-live-status");
+        const data = await res.json();
+        setLiveStatus(data);
+      } catch {
+        setLiveStatus({ configured: false, isLive: false });
+      } finally {
+        setCheckingLive(false);
+      }
+    };
+    checkLive();
   }, []);
 
-  // Update word of the month
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    await supabase
-      .from("word_of_month")
-      .insert([{ verse, message, updated_at: new Date().toISOString() }]);
-    setLoading(false);
-    alert("Word of the Month updated!");
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#e1c575]/30 via-white to-[#2f3a82]/10 flex flex-col items-center py-10 px-4 lg:px-25 w-full">
+    <div className="min-h-screen bg-gradient-to-br from-gold/30 via-white to-navy/10 flex flex-col items-center py-10 px-4 lg:px-25 w-full">
       {/* Word of the Month */}
-      <section className="w-full max-w-5xl mb-10 p-8 rounded-3xl bg-gradient-to-r from-[#e1c575] to-[#2f3a82] shadow-2xl text-white text-center mx-auto relative overflow-hidden">
+      <section className="w-full max-w-5xl mb-10 p-8 rounded-3xl bg-gradient-to-r from-gold to-navy shadow-2xl text-white text-center mx-auto relative overflow-hidden">
       <div className="absolute left-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -z-10" />
       <div className="absolute right-0 bottom-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -z-10" />
       <h2 className="text-4xl font-extrabold mb-3 tracking-wide drop-shadow-lg">Word of the Month</h2>
@@ -55,33 +62,52 @@ export default function StreamPage() {
       </section>
 
       {/* Live Sermon Stream */}
-      <section className="w-full max-w-6xl bg-white/90 rounded-3xl shadow-2xl p-8 flex flex-col items-center mb-12 border border-[#e1c575]/30">
-        <h1 className="text-3xl lg:text-4xl font-extrabold text-[#2f3a82] mb-6 tracking-tight text-center">Live Sermon Stream</h1>
-        <div className="w-full aspect-video bg-black rounded-2xl overflow-hidden flex items-center justify-center mb-6 border-4 border-[#e1c575]/40 shadow-lg">
-          {/* Always show placeholder video */}
-          <iframe
-            className="w-full h-full"
-            src={`https://www.youtube.com/embed/${PLACEHOLDER_VIDEO_ID}`}
-            title="Placeholder Sermon Video"
-            aria-label="Placeholder Sermon Video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{ minHeight: 320 }}
-          />
+      <section className="w-full max-w-6xl p-8 flex flex-col items-center mb-12">
+        <h1 className="text-3xl lg:text-4xl font-extrabold text-navy mb-6 tracking-tight text-center">Live Sermon Stream</h1>
+        <div className="w-full aspect-video bg-black rounded-2xl overflow-hidden flex items-center justify-center mb-6 border-4 border-gold/40 shadow-lg">
+          {checkingLive ? (
+            <div className="text-white/70 text-center px-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold mx-auto mb-4"></div>
+              Checking for a live stream...
+            </div>
+          ) : liveStatus?.isLive && liveStatus.videoId ? (
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube.com/embed/${liveStatus.videoId}?autoplay=1`}
+              title="Live Sermon Stream"
+              aria-label="Live Sermon Stream"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ minHeight: 320 }}
+            />
+          ) : (
+            <div className="text-white text-center px-8 py-16">
+              <p className="text-2xl font-bold mb-2">We're not live right now</p>
+              <p className="text-white/70 mb-6">Join us every Sunday at 10:00 AM for our live sermon.</p>
+              <a
+                href={liveStatus?.channelUrl ?? "https://www.youtube.com/@ELCSACentralDioceseYouthLeague"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-gold text-navy font-semibold px-6 py-2 rounded-full hover:bg-white transition-colors"
+              >
+                Watch Past Sermons on YouTube
+              </a>
+            </div>
+          )}
         </div>
         <p className="text-gray-700 text-lg text-center mb-4">Join us every Sunday for the live sermon. If the stream is not live, please check back at the scheduled time.</p>
         <div className="flex flex-col md:flex-row gap-6 w-full justify-center mt-4">
-          <div className="flex-1 bg-[#2f3a82]/10 rounded-xl p-4 text-center">
-            <h3 className="font-bold text-[#2f3a82] mb-2">Upcoming Sermon</h3>
+          <div className="flex-1 bg-navy/10 rounded-xl p-4 text-center">
+            <h3 className="font-bold text-navy mb-2">Upcoming Sermon</h3>
             <p className="text-gray-800">"Walking in Faith"<br /><span className="text-sm text-gray-500">Sunday, 10:00 AM</span></p>
           </div>
-          <div className="flex-1 bg-[#e1c575]/10 rounded-xl p-4 text-center">
-            <h3 className="font-bold text-[#e1c575] mb-2">Need Prayer?</h3>
-            <p className="text-gray-800">Submit your prayer requests <a href="/contact" className="underline text-[#2f3a82] font-semibold">here</a>.</p>
+          <div className="flex-1 bg-gold/10 rounded-xl p-4 text-center">
+            <h3 className="font-bold text-gold mb-2">Need Prayer?</h3>
+            <p className="text-gray-800">Submit your prayer requests <a href="/contact" className="underline text-navy font-semibold">here</a>.</p>
           </div>
-          <div className="flex-1 bg-[#2f3a82]/10 rounded-xl p-4 text-center">
-            <h3 className="font-bold text-[#2f3a82] mb-2">Support Our Ministry</h3>
-            <p className="text-gray-800">You can give online <a href="/giving" className="underline text-[#e1c575] font-semibold">here</a>.</p>
+          <div className="flex-1 bg-navy/10 rounded-xl p-4 text-center">
+            <h3 className="font-bold text-navy mb-2">Support Our Ministry</h3>
+            <p className="text-gray-800">You can give online <a href="/giving" className="underline text-gold font-semibold">here</a>.</p>
           </div>
         </div>
       </section>
@@ -89,33 +115,33 @@ export default function StreamPage() {
       {/* Community Section */}
       <section className="w-full max-w-6xl mx-auto mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white/80 rounded-2xl shadow-lg p-8 flex flex-col items-center text-center">
-            <h3 className="text-2xl font-bold text-[#2f3a82] mb-2">Connect With Us</h3>
+          <div className="p-8 flex flex-col items-center text-center">
+            <h3 className="text-2xl font-bold text-navy mb-2">Connect With Us</h3>
             <p className="text-gray-700 mb-4">Follow us on social media for updates, inspiration, and community events.</p>
             <div className="flex gap-4 justify-center">
-              <a href="https://www.youtube.com/@ELCSACentralDioceseYouthLeague" className="text-[#2f3a82] hover:text-[#e1c575] text-2xl flex items-center gap-2" aria-label="YouTube">
+              <a href="https://www.youtube.com/@ELCSACentralDioceseYouthLeague" className="text-navy hover:text-gold text-2xl flex items-center gap-2" aria-label="YouTube">
                 <FaYoutube /> <span className="hidden sm:inline">YouTube</span>
               </a>
-              <a href="https://www.instagram.com/elcsacdyl/" className="text-[#2f3a82] hover:text-[#e1c575] text-2xl flex items-center gap-2" aria-label="Instagram">
+              <a href="https://www.instagram.com/elcsacdyl/" className="text-navy hover:text-gold text-2xl flex items-center gap-2" aria-label="Instagram">
                 <FaInstagram /> <span className="hidden sm:inline">Instagram</span>
               </a>
             </div>
           </div>
-          <div className="bg-white/80 rounded-2xl shadow-lg p-8 flex flex-col items-center text-center">
-            <h3 className="text-2xl font-bold text-[#e1c575] mb-2">Join Our Newsletter</h3>
+          <div className="p-8 flex flex-col items-center text-center">
+            <h3 className="text-2xl font-bold text-gold mb-2">Join Our Newsletter</h3>
             <p className="text-gray-700 mb-4">Stay up to date with the latest news, events, and sermons.</p>
             <form className="flex flex-col sm:flex-row gap-2 w-full max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email address"
-                className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2f3a82]"
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-navy"
                 required
                 value={newsletterEmail}
                 onChange={e => setNewsletterEmail(e.target.value)}
               />
               <button
                 type="submit"
-                className="bg-[#2f3a82] hover:bg-[#e1c575] text-white font-bold px-6 py-2 rounded-lg transition-all"
+                className="bg-navy hover:bg-gold text-white font-bold px-6 py-2 rounded-lg transition-all"
                 onClick={e => {
                   e.preventDefault();
                   setNewsletterMsg('Thank you for subscribing!');
@@ -132,13 +158,6 @@ export default function StreamPage() {
         </div>
       </section>
 
-      {/* Admin Section - Manage Word of the Month */}
-      
-
-      {/* Footer */}
-      <footer className="mt-10 text-center text-gray-400 text-xs sm:text-sm">
-        &copy; {year ?? ""} ELCSA CDYL. All rights reserved.
-      </footer>
     </div>
   );
 }
