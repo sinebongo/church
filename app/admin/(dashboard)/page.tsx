@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default async function AdminHomePage() {
   const supabase = await createClient();
 
-  const [events, members, leadership, content] = await Promise.all([
+  const [events, newMessages, members, leadership, content] = await Promise.all([
     supabase.from("events").select("id", { count: "exact", head: true }),
+    supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
     supabase.from("church_members").select("id", { count: "exact", head: true }),
     supabase.from("leadership").select("id", { count: "exact", head: true }),
     supabase.from("site_content").select("id", { count: "exact", head: true }),
@@ -14,6 +15,7 @@ export default async function AdminHomePage() {
 
   const cards = [
     { label: "Events", count: events.count ?? 0, href: "/admin/events" },
+    { label: "New Messages", count: newMessages.count ?? 0, href: "/admin/messages" },
     { label: "Church Members", count: members.count ?? 0, href: "/admin/members" },
     { label: "Leadership", count: leadership.count ?? 0, href: "/admin/leadership" },
     { label: "Content Fields", count: content.count ?? 0, href: "/admin/content" },
@@ -22,7 +24,7 @@ export default async function AdminHomePage() {
   return (
     <div>
       <h1 className="font-serif text-3xl font-bold text-navy mb-6">Dashboard</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {cards.map((card) => (
           <Link key={card.href} href={card.href}>
             <Card className="hover:shadow-md transition-shadow">

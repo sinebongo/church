@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* This site has no dark theme. Force dark: variants to a class that's never
+   applied, instead of following the visitor's OS color-scheme preference —
+   otherwise shadcn's built-in dark: utilities (e.g. dark:bg-input/30) silently
+   wreck contrast (near-invisible inputs, dark-on-dark placeholder text) for
+   anyone with system dark mode on. */
+@custom-variant dark (&:is(.no-dark-theme-in-use *));
+
 :root {
   --background: #fdf8ef;
   --foreground: #1c2033;

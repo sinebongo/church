@@ -9,6 +9,7 @@ import { signOutAdmin } from "@/app/admin/actions";
 const links = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/events", label: "Events" },
+  { href: "/admin/messages", label: "Messages" },
   { href: "/admin/members", label: "Members" },
   { href: "/admin/leadership", label: "Leadership" },
   { href: "/admin/word-of-month", label: "Word of the Month" },
