@@ -2,15 +2,17 @@
 
 import React, { useRef, useEffect } from 'react'
 import { Header } from './Header'
+import { useContent } from '@/app/context/ContentProvider'
 
 export const Hero = () => {
     const videoRef = useRef<HTMLVideoElement>(null)
+    const videoSrc = useContent('hero.video', '/video.mp4')
 
     useEffect(() => {
         if (videoRef.current) {
             videoRef.current.playbackRate = 0.6
         }
-    }, [])
+    }, [videoSrc])
 
     return (
         <div className="relative h-[100vh] w-full overflow-x-hidden overflow-hidden">
@@ -21,7 +23,7 @@ export const Hero = () => {
                 muted
                 playsInline
                 className="absolute top-0 left-0 w-full h-full object-cover z-[1]"
-                src="/video.mp4"
+                src={videoSrc}
             />
             <div className="absolute top-0 left-0 w-full h-full z-[2] bg-gradient-to-b from-[#2f3a82b3] to-[#2f3a84] opacity-80" />
             <Header />

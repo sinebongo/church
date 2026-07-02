@@ -38,6 +38,26 @@ export default function EventsPage() {
     const [isMounted, setIsMounted] = useState(false);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [newsletterEmail, setNewsletterEmail] = useState("");
+    const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+    const handleNewsletterSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setNewsletterStatus("sending");
+        try {
+            const res = await fetch("/api/send-email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: "newsletter", email: newsletterEmail }),
+            });
+            const data = await res.json();
+            if (!data.success) throw new Error(data.error);
+            setNewsletterStatus("sent");
+            setNewsletterEmail("");
+        } catch {
+            setNewsletterStatus("error");
+        }
+    };
 
     useEffect(() => {
         setIsMounted(true);
@@ -380,16 +400,30 @@ export default function EventsPage() {
                         Don't miss out on upcoming events and announcements. 
                         Subscribe to our newsletter for weekly updates.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-                        <input 
-                            type="email" 
-                            placeholder="elcsa.cdpyl@gmail.com"
-                            className="flex-1 px-4 py-3 rounded-lg text-gray-800 focus:outline-none ring-2 ring-white focus:ring-2 focus:ring-white"
-                        />
-                        <button className="bg-white text-navy px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                            Subscribe
-                        </button>
-                    </div>
+                    {newsletterStatus === "sent" ? (
+                        <p className="max-w-md mx-auto bg-white/10 rounded-lg p-4">Thank you for subscribing!</p>
+                    ) : (
+                        <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                            <input
+                                type="email"
+                                placeholder="elcsa.cdpyl@gmail.com"
+                                required
+                                value={newsletterEmail}
+                                onChange={e => setNewsletterEmail(e.target.value)}
+                                className="flex-1 px-4 py-3 rounded-lg text-gray-800 focus:outline-none ring-2 ring-white focus:ring-2 focus:ring-white"
+                            />
+                            <button
+                                type="submit"
+                                disabled={newsletterStatus === "sending"}
+                                className="bg-white text-navy px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                            >
+                                {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
+                            </button>
+                            {newsletterStatus === "error" && (
+                                <p className="w-full text-center text-sm text-white bg-red-500/60 rounded-lg py-2">Something went wrong. Please try again.</p>
+                            )}
+                        </form>
+                    )}
                 </div>
             </section>
         </div>

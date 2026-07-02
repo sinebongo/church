@@ -4,6 +4,13 @@ import nodemailer from 'nodemailer';
 export async function POST(req: Request) {
   const { name, email, message, type } = await req.json();
 
+  if (!process.env.GMAIL_APP_PASSWORD) {
+    return NextResponse.json(
+      { success: false, error: "Email sending is not configured yet." },
+      { status: 503 }
+    );
+  }
+
   // Set up transporter using Gmail SMTP
   const transporter = nodemailer.createTransport({
     service: 'gmail',

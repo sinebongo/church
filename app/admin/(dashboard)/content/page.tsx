@@ -25,6 +25,7 @@ export default function AdminContentPage() {
   const [rows, setRows] = useState<ContentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   const fetchContent = async () => {
     setLoading(true);
@@ -54,6 +55,25 @@ export default function AdminContentPage() {
     else toast.success(`${section} content saved`);
   };
 
+  const uploadImage = async (row: ContentRow, file: File) => {
+    setUploadingId(row.id);
+    const path = `${row.section}-${row.key}-${Date.now()}-${file.name}`;
+    const { data, error } = await supabase.storage.from("site-images").upload(path, file, { upsert: true });
+    if (error || !data?.path) {
+      toast.error("Image upload failed");
+      setUploadingId(null);
+      return;
+    }
+    const publicUrl = supabase.storage.from("site-images").getPublicUrl(data.path).data.publicUrl;
+    updateValue(row.id, publicUrl);
+    const { error: saveError } = await supabase
+      .from("site_content")
+      .upsert({ id: row.id, section: row.section, key: row.key, label: row.label, value: publicUrl, type: row.type });
+    setUploadingId(null);
+    if (saveError) toast.error(saveError.message);
+    else toast.success(`${row.label} updated`);
+  };
+
   if (loading) return <p className="text-muted-foreground">Loading...</p>;
 
   return (
@@ -79,7 +99,27 @@ export default function AdminContentPage() {
                   .map((row) => (
                     <div key={row.id} className="flex flex-col gap-1.5">
                       <Label>{row.label}</Label>
-                      {row.type === "textarea" ? (
+                      {row.type === "image_url" ? (
+                        <div className="flex flex-col gap-2">
+                          {row.value && (
+                            row.value.match(/\.(mp4|webm|mov)$/i) ? (
+                              <video src={row.value} className="w-full max-w-xs rounded-lg border border-navy/15" muted loop autoPlay />
+                            ) : (
+                              <img src={row.value} alt={row.label} className="w-full max-w-xs rounded-lg border border-navy/15 object-cover" />
+                            )
+                          )}
+                          <Input
+                            type="file"
+                            accept="image/*,video/*"
+                            disabled={uploadingId === row.id}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) uploadImage(row, file);
+                            }}
+                          />
+                          {uploadingId === row.id && <p className="text-sm text-muted-foreground">Uploading...</p>}
+                        </div>
+                      ) : row.type === "textarea" ? (
                         <Textarea value={row.value} onChange={(e) => updateValue(row.id, e.target.value)} rows={3} />
                       ) : (
                         <Input value={row.value} onChange={(e) => updateValue(row.id, e.target.value)} />

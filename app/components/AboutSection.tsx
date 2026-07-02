@@ -12,6 +12,7 @@ export const AboutSection = () => {
   const body2 = useContent('about.body_2', 'Our mission is to cultivate spiritual growth, leadership, and active participation in the community, all while fostering deep connections with God through worship, prayer, and reflection on His word.');
   const body3 = useContent('about.body_3', 'The Youth League is structured across several active divisions in the Province of Gauteng including Potchefstroom in the Northwest, ensuring a comprehensive and inclusive approach to youth ministry.');
   const ctaLabel = useContent('about.cta_label', 'Learn More');
+  const image = useContent('about.image', '/CDYL.jpg');
 return (
   <div className="flex flex-col md:flex-row items-center justify-center bg-white  text-navy md:h-[90vh] overflow-x-hidden overflow-hidden my-8 px-8 md:px-12 w-full">
     
@@ -25,7 +26,7 @@ return (
     >
       <div className="relative w-full h-[350px] md:w-[600px] md:h-[450px] rounded-lg overflow-hidden shadow-lg">
       <Image
-        src="/CDYL.jpg"
+        src={image}
         alt="Church Youth"
         fill
         style={{ objectFit: 'cover', objectPosition: 'top' }}

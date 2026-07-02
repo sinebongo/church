@@ -12,6 +12,7 @@ const GivingSection = () => {
     "In response to the escalating crisis in our society, our organization was pleased to announce that we donated over 120+ blankets to four NGOs in the Vanderbijlpark area in July. This initiative aimed to provide essential support and warmth to those affected, and we are committed to making a positive impact in our community."
   );
   const ctaLabel = useContent("giving.cta_label", "Give Now");
+  const image = useContent("giving.image", "/charity.jpg");
 
   return (
     <section
@@ -54,7 +55,7 @@ const GivingSection = () => {
               className="w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-8 border-gold shadow-2xl relative z-10 bg-white flex items-center justify-center"
             >
               <img
-              src="/charity.jpg"
+              src={image}
               alt="Giving"
               className="w-full h-full object-cover"
               loading="lazy"

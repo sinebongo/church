@@ -1,6 +1,7 @@
 
 
 "use client";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { FaTiktok, FaInstagram, FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
@@ -19,6 +20,27 @@ const address = [
 
 
 export default function ContactPage() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "contact", ...form }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      setStatus("sent");
+      setForm({ name: "", email: "", message: "" });
+    } catch {
+      setStatus("error");
+    }
+  };
+
   return (
     <motion.main
       initial={{ opacity: 0, y: 40 }}
@@ -58,21 +80,56 @@ export default function ContactPage() {
         </section>
         <section className="flex-1 flex flex-col gap-4 min-w-0">
           <h2 className="text-xl sm:text-2xl font-semibold text-navy mb-2">Send Us a Message</h2>
-          <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()}>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" type="text" required placeholder="Your Name" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required placeholder="elcsa.cdpyl@gmail.com" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="message">Message</Label>
-              <Textarea id="message" name="message" rows={4} required placeholder="Type your message here..." />
-            </div>
-            <Button type="submit" className="bg-navy hover:bg-navy-dark">Send Message</Button>
-          </form>
+          {status === "sent" ? (
+            <p className="text-navy bg-navy/10 rounded-lg p-6 text-center">
+              Thank you! Your message has been sent — we'll be in touch soon.
+            </p>
+          ) : (
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  placeholder="Your Name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="elcsa.cdpyl@gmail.com"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="message">Message</Label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  rows={4}
+                  required
+                  placeholder="Type your message here..."
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                />
+              </div>
+              {status === "error" && (
+                <p className="text-sm text-destructive">Something went wrong sending your message. Please try again or call us directly.</p>
+              )}
+              <Button type="submit" disabled={status === "sending"} className="bg-navy hover:bg-navy-dark">
+                {status === "sending" ? "Sending..." : "Send Message"}
+              </Button>
+            </form>
+          )}
           <h2 className="text-xl sm:text-2xl font-semibold text-navy mb-2 mt-8">Location Map</h2>
           <div className="w-full h-56 sm:h-64 rounded-lg overflow-hidden border-2 border-blue-200 shadow-md">
             <iframe
